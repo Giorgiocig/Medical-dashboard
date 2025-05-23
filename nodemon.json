@@ -1,0 +1,1 @@
+{ "watch": ["./backend/src", ".env", "package-lock.json"] }
