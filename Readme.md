@@ -2,14 +2,16 @@ Run eslint: npx eslint src
 
 # Start-up mongoDB
 
--To create a container for mongoDB image (It will pull mongoDB image if not present in the local docker repository):
-docker run -d --name dbserver -p 27017:27017 --restart unless-stopped mongo:6.0.4
+- To create a container for mongoDB image (It will pull mongoDB image if not present in the local docker repository):
+  docker run -d --name dbserver -p 27017:27017 --restart unless-stopped mongo:6.0.4
 
--To connect to MongoDB server using mongosh (MongoDB shell):
-mongosh mongodb://localhost:27017/ReactMedicalDashboard
+- Docker container should be start up to get db available
 
--To test
-ReactMedicalDashboard> console.log("test")
+- To launch mongosh (MongoDB shell):
+  mongosh mongodb://localhost:27017/reactmedicaldashboard
+
+- To test
+  reactmedicaldashboard> console.log("test")
 
 # Test
 
@@ -19,6 +21,16 @@ mongo-db-memory-server allows to spin up a fresh instance of MongoDB database st
 
 To launch express
 root dir -> npm run start
+
+WITH NODEMON
+to launch backend with nodemon
+root dir -> npm run dev
+
+# frontend
+
+root project
+cd frontend
+npm run dev
 
 # API routes
 
