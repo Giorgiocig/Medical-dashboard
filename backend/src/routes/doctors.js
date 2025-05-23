@@ -46,13 +46,13 @@ export function doctorsRoutes(app) {
       return res.json(doctor)
     } catch (error) {
       console.log('error while creating', error)
-      return res.status(500).end
+      return res.status(500).end()
     }
   })
   app.patch('/api/v1/doctors/:id', async (req, res) => {
     try {
       const doctor = await updateDoctor(req.params.id, req.body)
-      return res.status(doctor)
+      return res.status(200).json(doctor)
     } catch (error) {
       'error while updating', console.error(error)
       res.status(500).end()
