@@ -3,6 +3,9 @@ import {
   listDoctorByName,
   listDoctorBySpeciality,
   getDoctorById,
+  createDoctor,
+  updateDoctor,
+  deleteDoctor,
 } from '../services/doctors.js'
 
 export function doctorsRoutes(app) {
@@ -35,6 +38,35 @@ export function doctorsRoutes(app) {
     } catch (error) {
       console.error('error getting post', error)
       return res.status(500).end()
+    }
+  })
+  app.post('/api/v1/doctors/', async (req, res) => {
+    try {
+      const doctor = await createDoctor(req.body)
+      return res.json(doctor)
+    } catch (error) {
+      console.log('error while creating', error)
+      return res.status(500).end
+    }
+  })
+  app.patch('/api/v1/doctors/:id', async (req, res) => {
+    try {
+      const doctor = await updateDoctor(req.params.id, req.body)
+      return res.status(doctor)
+    } catch (error) {
+      'error while updating', console.error(error)
+      res.status(500).end()
+    }
+  })
+  app.delete('/api/v1/doctors/:id', async (req, res) => {
+    try {
+      const { deleteCount } = await deleteDoctor(req.params.id)
+      if (deleteCount === 0) {
+        return res.status(404)
+      }
+    } catch (error) {
+      'error while deleting', console.error(error)
+      res.status(500).end()
     }
   })
 }
