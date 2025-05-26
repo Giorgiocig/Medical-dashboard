@@ -2,6 +2,7 @@ import Box from '@mui/material/Box'
 import Card from '@mui/material/Card'
 import CardContent from '@mui/material/CardContent'
 import Typography from '@mui/material/Typography'
+import type { IDoctor } from '../utilities/interfaces'
 
 export default function DoctorCard({
     name,
@@ -9,13 +10,7 @@ export default function DoctorCard({
     speciality,
     availableForOperatingRoom,
     availableForClinic,
-}: {
-    name: string
-    surname: string
-    speciality: string
-    availableForOperatingRoom: boolean
-    availableForClinic: boolean
-}) {
+}: IDoctor) {
     return (
         <Box sx={{ minWidth: 275 }}>
             <Card variant='outlined'>
