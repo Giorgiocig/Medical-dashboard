@@ -10,3 +10,7 @@ export interface IListDoctorsOptions {
   sortBy: string
   sortOrder: string
 }
+
+export interface IDoctorCardList {
+  doctors: IDoctor[]
+}
