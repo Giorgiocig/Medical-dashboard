@@ -1,4 +1,4 @@
-import { TextField, Typography } from '@mui/material'
+import { Button, TextField, Typography } from '@mui/material'
 import Radio from '@mui/material/Radio'
 import RadioGroup from '@mui/material/RadioGroup'
 import FormControlLabel from '@mui/material/FormControlLabel'
@@ -49,6 +49,7 @@ export default function CreateDoctor({ }: {}) {
                         label='not available'
                     />
                 </RadioGroup>
+                <Button variant="contained">Create</Button>
             </FormControl>
         </div>
     )
