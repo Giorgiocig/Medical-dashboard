@@ -22,7 +22,7 @@ export function doctorsRoutes(app) {
       } else if (speciality) {
         return res.json(await listDoctorBySpeciality(speciality, options))
       } else {
-        return res.json(listAllDoctors(options))
+        return res.json(await listAllDoctors(options))
       }
     } catch (error) {
       console.error('error listing doctors', error)
