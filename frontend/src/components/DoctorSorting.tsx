@@ -3,12 +3,11 @@ import InputLabel from '@mui/material/InputLabel'
 import MenuItem from '@mui/material/MenuItem'
 import FormControl from '@mui/material/FormControl'
 import Select from '@mui/material/Select'
-import { Typography } from '@mui/material'
 
 export default function DoctorSorting({
-    fields = [],
+    // fields = [],
     value,
-    onChange,
+    // onChange,
     orderValue,
     onOrderChange,
 }: {
@@ -21,7 +20,7 @@ export default function DoctorSorting({
     console.log(value)
     return (
         <Box display='flex' alignItems='center' gap={2}>
-            <FormControl variant='outlined' size='small'>
+            {/* <FormControl variant='outlined' size='small'>
                 <InputLabel id='sort-by-label'>Sort By Name</InputLabel>
                 <Select
                     labelId='sort-by-label'
@@ -36,9 +35,9 @@ export default function DoctorSorting({
                         </MenuItem>
                     ))}
                 </Select>
-            </FormControl>
+            </FormControl> 
 
-            <Typography>/</Typography>
+            <Typography>/</Typography> */}
 
             <FormControl variant='outlined' size='small'>
                 <InputLabel id='sort-order-label'>Sort Order Name</InputLabel>
