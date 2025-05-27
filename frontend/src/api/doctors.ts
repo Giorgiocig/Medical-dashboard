@@ -18,3 +18,10 @@ export const createDoctor = async (doctor: IDoctor) => {
   })
   return await res.json()
 }
+
+export const deleteDoctor = async (id: string) => {
+  const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/doctors/${id}`, {
+    method: 'DELETE',
+  })
+  return await res.json()
+}
