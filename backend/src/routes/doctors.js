@@ -64,6 +64,7 @@ export function doctorsRoutes(app) {
       if (deleteCount === 0) {
         return res.status(404)
       }
+      return res.status(200).json({ success: true })
     } catch (error) {
       'error while deleting', console.error(error)
       res.status(500).end()
