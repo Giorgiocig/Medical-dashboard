@@ -8,6 +8,7 @@ import { getDoctors } from './api/doctors'
 import { useEffect, useState } from 'react'
 import SpecialityFilter from './components/SpecialityFilter'
 import type { IDoctor } from './utilities/interfaces'
+import useDebounce from './hooks/useDebounce'
 
 export function Dashboard() {
   const [name, setName] = useState('')
@@ -15,11 +16,14 @@ export function Dashboard() {
   const [sortBy, setSortBy] = useState('speciality')
   const [sortOrder, setSortOrder] = useState('descending')
   const [allSpecialities, setAllSpecialities] = useState<string[]>([])
+  // debounce 
+  const debouncedName = useDebounce(name, 500)
 
   const doctorsQuery = useQuery({
     queryKey: ['doctors', { name, speciality, sortBy, sortOrder }],
-    queryFn: () => getDoctors({ name, speciality, sortBy, sortOrder }),
+    queryFn: () => getDoctors({ debouncedName, speciality, sortBy, sortOrder }),
   })
+
   const doctors = doctorsQuery.data ?? []
 
   useEffect(() => {
