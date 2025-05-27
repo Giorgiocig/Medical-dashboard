@@ -38,7 +38,7 @@ export function Dashboard() {
       }
     }
     fetchSpecialities()
-  }, [])
+  }, [doctors])
 
   return (
     <div style={{ padding: 20 }}>
