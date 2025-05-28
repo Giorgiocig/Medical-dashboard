@@ -30,7 +30,7 @@ export default function CreateDoctor({ }: {}) {
                 availableForClinic,
                 email,
             }),
-        onSuccess: () => queryClient.invalidateQueries({ queryKey: ['doctors'] }),
+        onSuccess: (data) => { queryClient.invalidateQueries({ queryKey: ['doctors'] }), setSuccessMessage(data.message) },
         onError: (error) => {
             console.error('Doctor creation failed:', error)
             setMessageError(error.message)
@@ -125,10 +125,8 @@ export default function CreateDoctor({ }: {}) {
                     Create
                 </Button>
             </FormControl>
-            {createDoctorMutation.isSuccess && (
-                <Typography>Doctor create successfully</Typography>
-            )}
             {errorMessage && <Alert severity="error">{errorMessage}</Alert>}
+            {createDoctorMutation.isSuccess && <Alert severity="success">{successMessage}</Alert>}
         </form>
     )
 }
