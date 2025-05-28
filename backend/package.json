@@ -28,7 +28,7 @@
   "scripts": {
     "lint": "eslint src",
     "test": "NODE_OPTIONS=--experimental-vm-modules jest",
-    "start": "node backend/src/index.js",
-    "dev": "nodemon backend/src/index.js"
+    "start": "node src/index.js",
+    "dev": "nodemon src/index.js"
   }
 }
