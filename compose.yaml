@@ -1,0 +1,30 @@
+services:
+  dashboard-database:
+    image: mongo
+    ports:
+      - '27017:27017'
+    volumes:
+      - mongodb-data:/data/db
+
+  dashboard-backend:
+    build: ./backend
+    environment:
+      - PORT=3001
+      - DATABASE_URL=mongodb://dashboard-database:27017/reactmedicaldashboard
+    ports:
+      - '3001:3001'
+    depends_on:
+      - dashboard-database
+
+  dashboard-frontend:
+    build:
+      context: ./frontend
+      args:
+        VITE_BACKEND_URL: http://localhost:3001/api/v1
+    ports:
+      - '3000:80'
+    depends_on:
+      - dashboard-backend
+
+volumes:
+  mongodb-data:
