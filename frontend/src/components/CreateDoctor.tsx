@@ -1,4 +1,4 @@
-import { Button, TextField, Typography } from '@mui/material'
+import { Alert, Button, TextField, Typography } from '@mui/material'
 import Radio from '@mui/material/Radio'
 import RadioGroup from '@mui/material/RadioGroup'
 import FormControlLabel from '@mui/material/FormControlLabel'
@@ -15,6 +15,9 @@ export default function CreateDoctor({ }: {}) {
     const [availableForOperatingRoom, setAvailableForOperatingRoom] =
         useState<boolean>(false)
     const [availableForClinic, setAvailableForClinic] = useState<boolean>(false)
+    const [email, setEmail] = useState<string>('')
+    const [errorMessage, setMessageError] = useState<null | string>(null)
+    const [successMessage, setSuccessMessage] = useState<null | string>(null)
     const queryClient = useQueryClient()
 
     const createDoctorMutation = useMutation({
@@ -25,10 +28,12 @@ export default function CreateDoctor({ }: {}) {
                 speciality,
                 availableForOperatingRoom,
                 availableForClinic,
+                email,
             }),
         onSuccess: () => queryClient.invalidateQueries({ queryKey: ['doctors'] }),
         onError: (error) => {
             console.error('Doctor creation failed:', error)
+            setMessageError(error.message)
         },
     })
 
@@ -64,6 +69,13 @@ export default function CreateDoctor({ }: {}) {
                     variant='outlined'
                     value={speciality}
                     onChange={(e) => setSpeciality(e.target.value)}
+                />
+                <TextField
+                    id='outlined-basic'
+                    label='email'
+                    variant='outlined'
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
                 />
                 <Typography>available for operating room</Typography>
                 <RadioGroup
@@ -116,6 +128,7 @@ export default function CreateDoctor({ }: {}) {
             {createDoctorMutation.isSuccess && (
                 <Typography>Doctor create successfully</Typography>
             )}
+            {errorMessage && <Alert severity="error">{errorMessage}</Alert>}
         </form>
     )
 }
