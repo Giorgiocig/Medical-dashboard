@@ -14,6 +14,7 @@ export default function DoctorCard({
     availableForOperatingRoom,
     availableForClinic,
     _id,
+    email
 }: IDoctor) {
     const queryClient = useQueryClient()
     const deleteDoctorMutation = useMutation({
@@ -34,6 +35,7 @@ export default function DoctorCard({
                         {name} {surname}
                     </Typography>
                     <Typography>{speciality}</Typography>
+                    <Typography>{email}</Typography>
                     <Typography>
                         Available for operating room{' '}
                         {availableForOperatingRoom ? 'YES' : 'NO'}
