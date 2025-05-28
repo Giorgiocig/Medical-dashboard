@@ -1,3 +1,4 @@
+import { Doctor } from '../db/models/doctors.js'
 import {
   listAllDoctors,
   listDoctorByName,
@@ -42,6 +43,13 @@ export function doctorsRoutes(app) {
   })
   app.post('/api/v1/doctors/', async (req, res) => {
     try {
+      const { email } = req.body
+      const existingDoctor = await Doctor.findOne({ email })
+      if (existingDoctor) {
+        return res
+          .status(400)
+          .json({ message: 'Doctor already exists with this email.' })
+      }
       const doctor = await createDoctor(req.body)
       return res.json(doctor)
     } catch (error) {
