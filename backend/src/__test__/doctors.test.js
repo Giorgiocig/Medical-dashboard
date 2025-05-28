@@ -10,7 +10,10 @@ import {
   deleteDoctor,
 } from '../services/doctors'
 import { Doctor } from '../db/models/doctors'
-import { sampleDoctors } from '../utilities/testData'
+import {
+  sampleDoctors,
+  sampleDoctorsWithEqualEmail,
+} from '../utilities/testData'
 
 describe('creating doctor', () => {
   test('with all parameters should succeed', async () => {
@@ -20,6 +23,7 @@ describe('creating doctor', () => {
       speciality: 'Orto',
       availableForOperatingRoom: true,
       availableForClinic: false,
+      email: 'gmail@com',
     }
     const createdDoctor = await createDoctor(doctor)
     expect(createdDoctor._id).toBeInstanceOf(mongoose.Types.ObjectId)
@@ -30,6 +34,7 @@ describe('creating doctor', () => {
     expect(typeof foundDoctor.speciality).toBe('string')
     expect(typeof foundDoctor.availableForOperatingRoom).toBe('boolean')
     expect(typeof foundDoctor.availableForClinic).toBe('boolean')
+    expect(typeof foundDoctor.email).toBe('string')
   })
   test('without name should fail', async () => {
     const doctor = {
@@ -37,12 +42,24 @@ describe('creating doctor', () => {
       speciality: 'Orto',
       availableForOperatingRoom: true,
       availableForClinic: false,
+      email: 'gmail@com',
     }
     try {
       await createDoctor(doctor)
     } catch (error) {
       expect(error).toBeInstanceOf(mongoose.Error.ValidationError)
       expect(error.message).toContain('`name` is required')
+    }
+  })
+  test('with equal email should fail', async () => {
+    try {
+      for (const doctor of sampleDoctorsWithEqualEmail) {
+        await createDoctor(doctor)
+      }
+    } catch (error) {
+      expect(error).toBeDefined()
+      expect(error.name).toBe('MongoServerError')
+      expect(error.code).toBe(11000)
     }
   })
 })
