@@ -51,7 +51,10 @@ export function doctorsRoutes(app) {
           .json({ message: 'Doctor already exists with this email.' })
       }
       const doctor = await createDoctor(req.body)
-      return res.json(doctor)
+      return res.status(201).json({
+        message: 'Doctor created successfully',
+        doctor,
+      })
     } catch (error) {
       console.log('error while creating', error)
       return res.status(500).end()
