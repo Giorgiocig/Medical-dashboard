@@ -7,6 +7,7 @@ export async function createDoctor({
   speciality,
   availableForOperatingRoom,
   availableForClinic,
+  email,
 }) {
   const doctor = new Doctor({
     name,
@@ -14,6 +15,7 @@ export async function createDoctor({
     speciality,
     availableForOperatingRoom,
     availableForClinic,
+    email,
   })
   return await doctor.save()
 }
