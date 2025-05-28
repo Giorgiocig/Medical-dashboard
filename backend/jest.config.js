@@ -9,7 +9,7 @@ export default {
   moduleNameMapper: {
     '^(\\.{1,2}/.*)\\.js$': '$1', // permette import da file .ts senza estensione .js
   },
-  globalSetup: '<rootDir>/backend/src/test/globalSetup.js',
-  globalTeardown: '<rootDir>/backend/src/test/globalTeardown.js',
-  setupFilesAfterEnv: ['<rootDir>/backend/src/test/setupFileAfterEnv.js'],
+  globalSetup: '<rootDir>/src/test/globalSetup.js',
+  globalTeardown: '<rootDir>/src/test/globalTeardown.js',
+  setupFilesAfterEnv: ['<rootDir>/src/test/setupFileAfterEnv.js'],
 }
