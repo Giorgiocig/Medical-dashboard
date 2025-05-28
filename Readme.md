@@ -19,24 +19,9 @@ Run eslint: npx eslint src
 
 mongo-db-memory-server allows to spin up a fresh instance of MongoDB database storing data only in memory, we can run our test on a fresh db
 
-# express
-
-To launch express
-root dir -> npm run start
-
-WITH NODEMON
-to launch backend with nodemon
-root dir -> npm run dev
-
-# frontend
-
-root project
-cd frontend
-npm run dev
-
 # env files
 
-1. root folder create a new .env file and write
+1. in backend folder create a new .env file and write
 
 PORT = 3000
 DATABASE_URL=mongodb://localhost:27017/reactmedicaldashboard
@@ -47,6 +32,47 @@ VITE_BACKEND_URL="http://localhost:3000/api/v1"
 
 IMPORTANT
 dotenv package needs to be installed
+
+# START UP WITHOUT DOCKER
+
+## express - backendd
+
+To launch express
+root dir -> npm run start
+
+WITH NODEMON
+to launch backend with nodemon
+root dir -> npm run dev
+
+## frontend - frontend
+
+root project
+cd frontend
+npm run dev
+
+# DOCKER BUILD AND RUN BACKEND AND FRONTEND IMAGES
+
+## build backend image
+
+docker image build -t reactmedicaldashboard-backend backend/
+
+## run backend image
+
+docker run --network=host -e PORT=3000 -e DATABASE_URL=mongodb://172.17.0.1:27017/reactmedicaldashboard -p 3000:3000 reactmedicaldashboard-backend
+
+## build frontend image
+
+docker build -t reactmedicaldashboard-frontend --build-arg VITE_BACKEND_URL=http://localhost:3000/api/v1 .
+
+## run frontend image
+
+docker run -p 3001:80 reactmedicaldashboard-frontend
+
+app is available to localhost:3001
+
+## docker-compose
+
+to build the application in the root project --> docker compose up
 
 # API routes
 
