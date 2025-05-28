@@ -16,6 +16,10 @@ export const createDoctor = async (doctor: IDoctor) => {
     },
     body: JSON.stringify(doctor),
   })
+  if (!res.ok) {
+    const errorBody = await res.json()
+    throw new Error(errorBody.message || 'Something went wrong')
+  }
   return await res.json()
 }
 
