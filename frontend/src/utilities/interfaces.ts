@@ -4,6 +4,7 @@ export interface IDoctor {
   speciality: string
   availableForOperatingRoom: boolean
   availableForClinic: boolean
+  email: string
   _id?: string
 }
 
