@@ -6,6 +6,7 @@ const doctorSchema = new Schema({
   speciality: { type: String, required: true },
   availableForOperatingRoom: { type: Boolean, required: true },
   availableForClinic: { type: Boolean, required: true },
+  email: { type: String, required: true, unique: true },
 })
 
 export const Doctor = mongoose.model('doctor', doctorSchema)
