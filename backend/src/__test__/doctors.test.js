@@ -9,8 +9,8 @@ import {
   updateDoctor,
   deleteDoctor,
 } from '../services/doctors'
-import { sampleDoctors } from '../../../utilities/testData'
 import { Doctor } from '../db/models/doctors'
+import { sampleDoctors } from '../utilities/testData'
 
 describe('creating doctor', () => {
   test('with all parameters should succeed', async () => {
