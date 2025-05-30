@@ -10,9 +10,10 @@ import { useState } from 'react'
 
 export default function CreateDoctor({
     dialogAction,
-}: {
-    dialogAction: () => void
-}) {
+    successMessage,
+    setSuccessMessage,
+    setIsSuccessSubmit
+}: any) {
     const [name, setName] = useState<string>('')
     const [surname, setSurname] = useState<string>('')
     const [speciality, setSpeciality] = useState<string>('')
@@ -21,7 +22,6 @@ export default function CreateDoctor({
     const [availableForClinic, setAvailableForClinic] = useState<boolean>(false)
     const [email, setEmail] = useState<string>('')
     const [errorMessage, setMessageError] = useState<null | string>(null)
-    const [successMessage, setSuccessMessage] = useState<null | string>(null)
     const queryClient = useQueryClient()
 
     const createDoctorMutation = useMutation({
@@ -36,7 +36,8 @@ export default function CreateDoctor({
             }),
         onSuccess: (data) => {
             queryClient.invalidateQueries({ queryKey: ['doctors'] }),
-                setSuccessMessage(data.message)
+                setSuccessMessage(data.message),
+                setIsSuccessSubmit(true)
         },
         onError: (error) => {
             console.error('Doctor creation failed:', error)
@@ -137,10 +138,6 @@ export default function CreateDoctor({
                     Create
                 </Button>
             </FormControl>
-            {errorMessage && <Alert severity='error'>{errorMessage}</Alert>}
-            {createDoctorMutation.isSuccess && (
-                <Alert severity='success'>{successMessage}</Alert>
-            )}
         </form>
     )
 }

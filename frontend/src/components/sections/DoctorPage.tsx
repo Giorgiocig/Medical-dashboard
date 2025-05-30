@@ -1,4 +1,4 @@
-import { Box, Typography } from '@mui/material'
+import { Alert, Box, Typography } from '@mui/material'
 import { useEffect, useState } from 'react'
 import useDebounce from '../../hooks/useDebounce'
 import { useQuery } from '@tanstack/react-query'
@@ -19,6 +19,14 @@ export default function DoctorPage({ }: Props) {
     const [sortBy, setSortBy] = useState('speciality')
     const [sortOrder, setSortOrder] = useState('descending')
     const [allSpecialities, setAllSpecialities] = useState<string[]>([])
+
+    //message
+    const [successMessage, setSuccessMessage] = useState<null | string>(null)
+    const [isSuccessSubmit, setIsSuccessSubmit] = useState<boolean>(false)
+
+    const [errorMessage, setErrorMessage] = useState<null | string>(null)
+    const [isErrorSubmit, setIsErrorSubmit] = useState<boolean>(false)
+
     // debounce
     const debouncedName = useDebounce(name, 500)
 
@@ -44,6 +52,14 @@ export default function DoctorPage({ }: Props) {
         fetchSpecialities()
     }, [doctors])
 
+
+    useEffect(() => {
+        const timeout = setTimeout(() => {
+            setIsSuccessSubmit(false);
+        }, 3000);
+
+        return () => clearTimeout(timeout);
+    }, [isSuccessSubmit]);
 
 
     return (
@@ -78,7 +94,14 @@ export default function DoctorPage({ }: Props) {
                 options={allSpecialities}
             />
             <Typography>CREATE DOCTOR</Typography>
-            <DashboardDialog />
+            <DashboardDialog
+                successMessage={successMessage}
+                setSuccessMessage={setSuccessMessage}
+                setIsSuccessSubmit={setIsSuccessSubmit}
+
+            />
+            {/*errorMessage && <Alert severity='error'>{errorMessage}</Alert> */}
+            {isSuccessSubmit && <Alert severity='success'>{successMessage}</Alert>}
         </Box>
     )
 }

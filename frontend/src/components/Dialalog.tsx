@@ -1,12 +1,11 @@
 import * as React from 'react';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import CreateDoctor from './doctorPage.tsx/CreateDoctor';
 
-export default function AlertDialog() {
+export default function AlertDialog({ successMessage, setSuccessMessage, setIsSuccessSubmit }: any) {
     const [open, setOpen] = React.useState(false);
 
     const handleClickOpen = () => {
@@ -20,7 +19,7 @@ export default function AlertDialog() {
     return (
         <React.Fragment>
             <Button variant="outlined" onClick={handleClickOpen}>
-                Open alert dialog
+                Open Dialog to create a new doctor
             </Button>
             <Dialog
                 open={open}
@@ -32,7 +31,7 @@ export default function AlertDialog() {
                     Create a new Doctor
                 </DialogTitle>
                 <DialogContent>
-                    <CreateDoctor dialogAction={handleClose} />
+                    <CreateDoctor dialogAction={handleClose} successMessage={successMessage} setSuccessMessage={setSuccessMessage} setIsSuccessSubmit={setIsSuccessSubmit} />
                 </DialogContent>
             </Dialog>
         </React.Fragment>
