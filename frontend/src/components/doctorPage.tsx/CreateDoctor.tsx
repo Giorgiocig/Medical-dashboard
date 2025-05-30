@@ -5,7 +5,7 @@ import FormControlLabel from '@mui/material/FormControlLabel'
 import FormControl from '@mui/material/FormControl'
 import FormLabel from '@mui/material/FormLabel'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { createDoctor } from '../api/doctors'
+import { createDoctor } from '../../api/doctors'
 import { useState } from 'react'
 
 export default function CreateDoctor({ }: {}) {
@@ -119,7 +119,7 @@ export default function CreateDoctor({ }: {}) {
                     variant='contained'
                     value={createDoctorMutation.isPending ? 'creating...' : 'Create'}
                     disabled={
-                        !name || !surname || !speciality || createDoctorMutation.isPending
+                        !name || !surname || !speciality || !email || createDoctorMutation.isPending
                     }
                 >
                     Create
@@ -127,6 +127,6 @@ export default function CreateDoctor({ }: {}) {
             </FormControl>
             {errorMessage && <Alert severity="error">{errorMessage}</Alert>}
             {createDoctorMutation.isSuccess && <Alert severity="success">{successMessage}</Alert>}
-        </form>
+        </form >
     )
 }
