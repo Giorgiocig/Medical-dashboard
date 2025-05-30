@@ -8,7 +8,11 @@ import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { createDoctor } from '../../api/doctors'
 import { useState } from 'react'
 
-export default function CreateDoctor({ }: {}) {
+export default function CreateDoctor({
+    dialogAction,
+}: {
+    dialogAction: () => void
+}) {
     const [name, setName] = useState<string>('')
     const [surname, setSurname] = useState<string>('')
     const [speciality, setSpeciality] = useState<string>('')
@@ -30,7 +34,10 @@ export default function CreateDoctor({ }: {}) {
                 availableForClinic,
                 email,
             }),
-        onSuccess: (data) => { queryClient.invalidateQueries({ queryKey: ['doctors'] }), setSuccessMessage(data.message) },
+        onSuccess: (data) => {
+            queryClient.invalidateQueries({ queryKey: ['doctors'] }),
+                setSuccessMessage(data.message)
+        },
         onError: (error) => {
             console.error('Doctor creation failed:', error)
             setMessageError(error.message)
@@ -115,18 +122,25 @@ export default function CreateDoctor({ }: {}) {
                     />
                 </RadioGroup>
                 <Button
+                    onClick={dialogAction}
                     type='submit'
                     variant='contained'
                     value={createDoctorMutation.isPending ? 'creating...' : 'Create'}
                     disabled={
-                        !name || !surname || !speciality || !email || createDoctorMutation.isPending
+                        !name ||
+                        !surname ||
+                        !speciality ||
+                        !email ||
+                        createDoctorMutation.isPending
                     }
                 >
                     Create
                 </Button>
             </FormControl>
-            {errorMessage && <Alert severity="error">{errorMessage}</Alert>}
-            {createDoctorMutation.isSuccess && <Alert severity="success">{successMessage}</Alert>}
-        </form >
+            {errorMessage && <Alert severity='error'>{errorMessage}</Alert>}
+            {createDoctorMutation.isSuccess && (
+                <Alert severity='success'>{successMessage}</Alert>
+            )}
+        </form>
     )
 }
