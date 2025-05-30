@@ -1,14 +1,15 @@
 import { Box, Typography } from '@mui/material'
-import DoctorCardList from './DoctorCardList'
-import DoctorFilter from './DoctorFilter'
-import DoctorSorting from './DoctorSorting'
-import SpecialityFilter from './SpecialityFilter'
-import CreateDoctor from './CreateDoctor'
 import { useEffect, useState } from 'react'
 import useDebounce from '../../hooks/useDebounce'
 import { useQuery } from '@tanstack/react-query'
 import { getDoctors } from '../../api/doctors'
 import type { IDoctor } from '../../utilities/interfaces'
+import DoctorCardList from '../doctorPage.tsx/DoctorCardList'
+import DoctorFilter from '../doctorPage.tsx/DoctorFilter'
+import DoctorSorting from '../doctorPage.tsx/DoctorSorting'
+import SpecialityFilter from '../doctorPage.tsx/SpecialityFilter'
+import CreateDoctor from '../doctorPage.tsx/CreateDoctor'
+import DashboardDialog from '../Dialalog'
 
 type Props = {}
 
@@ -43,6 +44,8 @@ export default function DoctorPage({ }: Props) {
         fetchSpecialities()
     }, [doctors])
 
+
+
     return (
         <Box>
             <Typography sx={{ paddingBottom: 3 }}>
@@ -75,7 +78,7 @@ export default function DoctorPage({ }: Props) {
                 options={allSpecialities}
             />
             <Typography>CREATE DOCTOR</Typography>
-            <CreateDoctor />
+            <DashboardDialog />
         </Box>
     )
 }
