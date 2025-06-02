@@ -1,4 +1,4 @@
-import { Alert, Box, Typography } from '@mui/material'
+import { Box, Snackbar, Typography } from '@mui/material'
 import { useEffect, useState } from 'react'
 import useDebounce from '../../hooks/useDebounce'
 import { useQuery } from '@tanstack/react-query'
@@ -8,7 +8,6 @@ import DoctorCardList from '../doctorPage.tsx/DoctorCardList'
 import DoctorFilter from '../doctorPage.tsx/DoctorFilter'
 import DoctorSorting from '../doctorPage.tsx/DoctorSorting'
 import SpecialityFilter from '../doctorPage.tsx/SpecialityFilter'
-import CreateDoctor from '../doctorPage.tsx/CreateDoctor'
 import DashboardDialog from '../Dialalog'
 
 type Props = {}
@@ -23,9 +22,6 @@ export default function DoctorPage({ }: Props) {
     //message
     const [successMessage, setSuccessMessage] = useState<null | string>(null)
     const [isSuccessSubmit, setIsSuccessSubmit] = useState<boolean>(false)
-
-    const [errorMessage, setErrorMessage] = useState<null | string>(null)
-    const [isErrorSubmit, setIsErrorSubmit] = useState<boolean>(false)
 
     // debounce
     const debouncedName = useDebounce(name, 500)
@@ -53,15 +49,6 @@ export default function DoctorPage({ }: Props) {
     }, [doctors])
 
 
-    useEffect(() => {
-        const timeout = setTimeout(() => {
-            setIsSuccessSubmit(false);
-        }, 3000);
-
-        return () => clearTimeout(timeout);
-    }, [isSuccessSubmit]);
-
-
     return (
         <Box>
             <Typography sx={{ paddingBottom: 3 }}>
@@ -74,12 +61,6 @@ export default function DoctorPage({ }: Props) {
                 value={name}
                 onChange={(value) => setName(value)}
             />
-            {/* <Typography>SPECIALITY</Typography>
-        <DoctorFilter
-          field='speciality'
-          value={speciality}
-          onChange={(value) => setSpeciality(value)}
-        /> */}
             <DoctorSorting
                 fields={['speciality']}
                 value={sortBy}
@@ -100,8 +81,12 @@ export default function DoctorPage({ }: Props) {
                 setIsSuccessSubmit={setIsSuccessSubmit}
 
             />
-            {/*errorMessage && <Alert severity='error'>{errorMessage}</Alert> */}
-            {isSuccessSubmit && <Alert severity='success'>{successMessage}</Alert>}
+            <Snackbar
+                open={isSuccessSubmit}
+                autoHideDuration={1500}
+                message={successMessage}
+                onClose={() => setIsSuccessSubmit(false)}
+            />
         </Box>
     )
 }
