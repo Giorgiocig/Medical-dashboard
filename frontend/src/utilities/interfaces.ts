@@ -16,3 +16,18 @@ export interface IListDoctorsOptions {
 export interface IDoctorCardList {
   doctors: IDoctor[]
 }
+
+export interface ICreateDoctorProps {
+  dialogAction: () => void
+  setSuccessMessage: (message: string) => void
+  setIsSuccessSubmit: (value: boolean) => void
+  setErrorMessage: (message: string) => void
+  setIsError: (value: boolean) => void
+}
+
+export interface IAlertDialog {
+  setSuccessMessage: (message: string) => void
+  setIsSuccessSubmit: (value: boolean) => void
+  setErrorMessage: (message: string) => void
+  setIsError: (value: boolean) => void
+}
