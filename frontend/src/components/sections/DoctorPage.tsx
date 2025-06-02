@@ -8,7 +8,7 @@ import DoctorCardList from '../doctorPage.tsx/DoctorCardList'
 import DoctorFilter from '../doctorPage.tsx/DoctorFilter'
 import DoctorSorting from '../doctorPage.tsx/DoctorSorting'
 import SpecialityFilter from '../doctorPage.tsx/SpecialityFilter'
-import DashboardDialog from '../Dialalog'
+import DashboardDialog from '../AlertDialalog'
 
 type Props = {}
 
@@ -19,9 +19,13 @@ export default function DoctorPage({ }: Props) {
     const [sortOrder, setSortOrder] = useState('descending')
     const [allSpecialities, setAllSpecialities] = useState<string[]>([])
 
+
     //message
     const [successMessage, setSuccessMessage] = useState<null | string>(null)
     const [isSuccessSubmit, setIsSuccessSubmit] = useState<boolean>(false)
+
+    const [errorMessage, setErrorMessage] = useState<null | string>(null)
+    const [isError, setIsError] = useState<boolean>(false);
 
     // debounce
     const debouncedName = useDebounce(name, 500)
@@ -76,9 +80,10 @@ export default function DoctorPage({ }: Props) {
             />
             <Typography>CREATE DOCTOR</Typography>
             <DashboardDialog
-                successMessage={successMessage}
                 setSuccessMessage={setSuccessMessage}
                 setIsSuccessSubmit={setIsSuccessSubmit}
+                setErrorMessage={setErrorMessage}
+                setIsError={setIsError}
 
             />
             <Snackbar
@@ -86,6 +91,12 @@ export default function DoctorPage({ }: Props) {
                 autoHideDuration={1500}
                 message={successMessage}
                 onClose={() => setIsSuccessSubmit(false)}
+            />
+            <Snackbar
+                open={isError}
+                autoHideDuration={2000}
+                message={errorMessage}
+                onClose={() => setIsError(false)}
             />
         </Box>
     )

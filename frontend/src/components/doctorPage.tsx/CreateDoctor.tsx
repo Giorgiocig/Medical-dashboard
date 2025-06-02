@@ -1,4 +1,4 @@
-import { Alert, Button, Snackbar, TextField, Typography, type SnackbarCloseReason } from '@mui/material'
+import { Button, TextField, Typography } from '@mui/material'
 import Radio from '@mui/material/Radio'
 import RadioGroup from '@mui/material/RadioGroup'
 import FormControlLabel from '@mui/material/FormControlLabel'
@@ -7,12 +7,15 @@ import FormLabel from '@mui/material/FormLabel'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { createDoctor } from '../../api/doctors'
 import { useState } from 'react'
+import type { ICreateDoctorProps } from '../../utilities/interfaces'
 
 export default function CreateDoctor({
     dialogAction,
     setSuccessMessage,
-    setIsSuccessSubmit
-}: any) {
+    setIsSuccessSubmit,
+    setErrorMessage,
+    setIsError
+}: ICreateDoctorProps) {
     const [name, setName] = useState<string>('')
     const [surname, setSurname] = useState<string>('')
     const [speciality, setSpeciality] = useState<string>('')
@@ -20,8 +23,6 @@ export default function CreateDoctor({
         useState<boolean>(false)
     const [availableForClinic, setAvailableForClinic] = useState<boolean>(false)
     const [email, setEmail] = useState<string>('')
-    const [messageError, setMessageError] = useState<null | string>(null)
-    const [snackbarOpen, setSnackbarOpen] = useState(false);
     const queryClient = useQueryClient()
 
     const createDoctorMutation = useMutation({
@@ -42,8 +43,8 @@ export default function CreateDoctor({
         },
         onError: (error) => {
             console.error('Doctor creation failed:', error)
-            setMessageError(error.message)
-            setSnackbarOpen(true)
+            setErrorMessage(error.message)
+            setIsError(true)
         },
     })
 
@@ -139,12 +140,6 @@ export default function CreateDoctor({
                     Create
                 </Button>
             </FormControl>
-            <Snackbar
-                open={snackbarOpen}
-                autoHideDuration={2000}
-                message={messageError}
-                onClose={() => setSnackbarOpen(false)}
-            />
         </form>
     )
 }
