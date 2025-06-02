@@ -1,4 +1,4 @@
-import { Alert, Button, TextField, Typography } from '@mui/material'
+import { Alert, Button, Snackbar, TextField, Typography, type SnackbarCloseReason } from '@mui/material'
 import Radio from '@mui/material/Radio'
 import RadioGroup from '@mui/material/RadioGroup'
 import FormControlLabel from '@mui/material/FormControlLabel'
@@ -10,7 +10,6 @@ import { useState } from 'react'
 
 export default function CreateDoctor({
     dialogAction,
-    successMessage,
     setSuccessMessage,
     setIsSuccessSubmit
 }: any) {
@@ -21,7 +20,8 @@ export default function CreateDoctor({
         useState<boolean>(false)
     const [availableForClinic, setAvailableForClinic] = useState<boolean>(false)
     const [email, setEmail] = useState<string>('')
-    const [errorMessage, setMessageError] = useState<null | string>(null)
+    const [messageError, setMessageError] = useState<null | string>(null)
+    const [snackbarOpen, setSnackbarOpen] = useState(false);
     const queryClient = useQueryClient()
 
     const createDoctorMutation = useMutation({
@@ -37,11 +37,13 @@ export default function CreateDoctor({
         onSuccess: (data) => {
             queryClient.invalidateQueries({ queryKey: ['doctors'] }),
                 setSuccessMessage(data.message),
-                setIsSuccessSubmit(true)
+                setIsSuccessSubmit(true),
+                dialogAction()
         },
         onError: (error) => {
             console.error('Doctor creation failed:', error)
             setMessageError(error.message)
+            setSnackbarOpen(true)
         },
     })
 
@@ -123,7 +125,6 @@ export default function CreateDoctor({
                     />
                 </RadioGroup>
                 <Button
-                    onClick={dialogAction}
                     type='submit'
                     variant='contained'
                     value={createDoctorMutation.isPending ? 'creating...' : 'Create'}
@@ -138,6 +139,12 @@ export default function CreateDoctor({
                     Create
                 </Button>
             </FormControl>
+            <Snackbar
+                open={snackbarOpen}
+                autoHideDuration={2000}
+                message={messageError}
+                onClose={() => setSnackbarOpen(false)}
+            />
         </form>
     )
 }
