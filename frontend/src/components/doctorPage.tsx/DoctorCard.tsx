@@ -2,7 +2,7 @@ import Box from '@mui/material/Box'
 import Card from '@mui/material/Card'
 import CardContent from '@mui/material/CardContent'
 import Typography from '@mui/material/Typography'
-import type { IDoctor } from '../../utilities/interfaces'
+import type { IDoctorCardProps } from '../../utilities/interfaces'
 import { Button } from '@mui/material'
 import { deleteDoctor } from '../../api/doctors'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
@@ -15,8 +15,8 @@ export default function DoctorCard({
     availableForClinic,
     _id,
     email,
-    handleClickOpen
-}: any) {
+    handleClickOpen,
+}: IDoctorCardProps) {
     const queryClient = useQueryClient()
     const deleteDoctorMutation = useMutation({
         mutationFn: (id: string) => deleteDoctor(id),
@@ -25,44 +25,61 @@ export default function DoctorCard({
             console.error('Doctor creation failed:', error)
         },
     })
+
     return (
         <Box sx={{ minWidth: 300 }}>
-            <Card variant='outlined' sx={{ padding: "1rem" }}>
+            <Card variant='outlined' sx={{ padding: '1rem' }}>
                 <CardContent>
-                    <Typography component="div" sx={{ paddingBottom: ".5rem" }}>
+                    <Typography component='div' sx={{ paddingBottom: '.5rem' }}>
                         {name} {surname}
                     </Typography>
 
-                    <Typography component="div" sx={{ color: 'text.secondary', fontSize: 14, paddingBottom: ".2rem" }}>
+                    <Typography
+                        component='div'
+                        sx={{
+                            color: 'text.secondary',
+                            fontSize: 14,
+                            paddingBottom: '.2rem',
+                        }}
+                    >
                         {speciality}
                     </Typography>
 
-                    <Typography component="div" sx={{ paddingBottom: ".2rem" }}>
-                        Available for operating room {availableForOperatingRoom ? 'YES' : 'NO'}
+                    <Typography component='div' sx={{ paddingBottom: '.2rem' }}>
+                        Available for operating room{' '}
+                        {availableForOperatingRoom ? 'YES' : 'NO'}
                     </Typography>
 
-                    <Typography component="div" sx={{ paddingBottom: ".2rem" }}>
+                    <Typography component='div' sx={{ paddingBottom: '.2rem' }}>
                         Available for clinic {availableForClinic ? 'YES' : 'NO'}
                     </Typography>
 
-                    <Typography component="div">
-                        {email}
-                    </Typography>
+                    <Typography component='div'>{email}</Typography>
                 </CardContent>
-                <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+                <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
                     <Button
-                        variant="outlined"
+                        variant='outlined'
                         color='primary'
-                        sx={{ width: "30%" }}
+                        sx={{ width: '30%' }}
                         onClick={() => _id && deleteDoctorMutation.mutate(_id)}
                     >
                         Delete
                     </Button>
                     <Button
-                        variant="outlined"
+                        variant='outlined'
                         color='primary'
-                        sx={{ width: "30%" }}
-                        onClick={handleClickOpen}
+                        sx={{ width: '30%' }}
+                        onClick={() =>
+                            handleClickOpen({
+                                _id,
+                                name,
+                                surname,
+                                speciality,
+                                availableForOperatingRoom,
+                                availableForClinic,
+                                email,
+                            })
+                        }
                     >
                         Edit
                     </Button>
