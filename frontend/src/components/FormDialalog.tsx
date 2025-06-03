@@ -1,10 +1,8 @@
-import * as React from 'react'
-import Button from '@mui/material/Button'
 import Dialog from '@mui/material/Dialog'
 import DialogContent from '@mui/material/DialogContent'
 import DialogTitle from '@mui/material/DialogTitle'
 import CreateDoctor from './doctorPage.tsx/CreateDoctor'
-import type { IAlertDialog } from '../utilities/interfaces'
+import type { IFormDialog } from '../utilities/interfaces'
 
 export default function FormDialog({
     setSuccessMessage,
@@ -13,8 +11,8 @@ export default function FormDialog({
     setIsError,
     handleClose,
     openFormDialog,
-}: any) {
-
+    selectedDoctor,
+}: IFormDialog) {
     return (
         <>
             <Dialog
@@ -31,7 +29,7 @@ export default function FormDialog({
                         setIsSuccessSubmit={setIsSuccessSubmit}
                         setErrorMessage={setErrorMessage}
                         setIsError={setIsError}
-
+                        selectedDoctor={selectedDoctor}
                     />
                 </DialogContent>
             </Dialog>
