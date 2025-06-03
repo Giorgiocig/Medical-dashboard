@@ -51,7 +51,8 @@ export async function updateDoctor(
   doctorId,
   { name, surname, speciality, availableForOperatingRoom, availableForClinic },
 ) {
-  if (!mongoose.Types.ObjectId.isValid(doctorId)) return null
+  if (!mongoose.Types.ObjectId.isValid(doctorId))
+    throw new Error('Invalid doctor ID')
   return await Doctor.findOneAndUpdate(
     { _id: doctorId },
     {
