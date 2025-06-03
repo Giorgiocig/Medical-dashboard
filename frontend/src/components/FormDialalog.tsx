@@ -6,29 +6,19 @@ import DialogTitle from '@mui/material/DialogTitle'
 import CreateDoctor from './doctorPage.tsx/CreateDoctor'
 import type { IAlertDialog } from '../utilities/interfaces'
 
-export default function AlertDialog({
+export default function FormDialog({
     setSuccessMessage,
     setIsSuccessSubmit,
     setErrorMessage,
-    setIsError
-}: IAlertDialog) {
-    const [open, setOpen] = React.useState(false)
-
-    const handleClickOpen = () => {
-        setOpen(true)
-    }
-
-    const handleClose = () => {
-        setOpen(false)
-    }
+    setIsError,
+    handleClose,
+    openFormDialog,
+}: any) {
 
     return (
         <>
-            <Button variant='outlined' onClick={handleClickOpen}>
-                Open Dialog to create a new doctor
-            </Button>
             <Dialog
-                open={open}
+                open={openFormDialog}
                 onClose={handleClose}
                 aria-labelledby='alert-dialog-title'
                 aria-describedby='alert-dialog-description'
