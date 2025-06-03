@@ -17,7 +17,6 @@ export default function DoctorSorting({
     orderValue: string
     onOrderChange: (value: string) => void
 }) {
-    console.log(value)
     return (
         <Box display='flex' alignItems='center' gap={2}>
             {/* <FormControl variant='outlined' size='small'>
