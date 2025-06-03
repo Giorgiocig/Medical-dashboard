@@ -8,6 +8,10 @@ export interface IDoctor {
   _id?: string
 }
 
+export interface IDoctorCardProps extends IDoctor {
+  handleClickOpen: (value: IDoctor) => void
+}
+
 export interface IListDoctorsOptions {
   sortBy: string
   sortOrder: string
@@ -15,6 +19,7 @@ export interface IListDoctorsOptions {
 
 export interface IDoctorCardList {
   doctors: IDoctor[]
+  handleClickOpen: (value: IDoctor) => void
 }
 
 export interface ICreateDoctorProps {
@@ -23,11 +28,16 @@ export interface ICreateDoctorProps {
   setIsSuccessSubmit: (value: boolean) => void
   setErrorMessage: (message: string) => void
   setIsError: (value: boolean) => void
+  selectedDoctor: IDoctor | null
 }
 
-export interface IAlertDialog {
+export interface IFormDialog {
   setSuccessMessage: (message: string) => void
   setIsSuccessSubmit: (value: boolean) => void
   setErrorMessage: (message: string) => void
   setIsError: (value: boolean) => void
+  handleClose: () => void
+  openFormDialog: boolean
+  selectedDoctor: IDoctor | null
+  handleClickOpen: (doctor: IDoctor) => void
 }
