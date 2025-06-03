@@ -14,8 +14,9 @@ export default function DoctorCard({
     availableForOperatingRoom,
     availableForClinic,
     _id,
-    email
-}: IDoctor) {
+    email,
+    handleClickOpen
+}: any) {
     const queryClient = useQueryClient()
     const deleteDoctorMutation = useMutation({
         mutationFn: (id: string) => deleteDoctor(id),
@@ -61,7 +62,7 @@ export default function DoctorCard({
                         variant="outlined"
                         color='primary'
                         sx={{ width: "30%" }}
-                        onClick={() => _id && deleteDoctorMutation.mutate(_id)}
+                        onClick={handleClickOpen}
                     >
                         Edit
                     </Button>
