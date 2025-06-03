@@ -1,4 +1,4 @@
-import { Box, Snackbar, Typography } from '@mui/material'
+import { Box, Button, Snackbar, Typography } from '@mui/material'
 import { useEffect, useState } from 'react'
 import useDebounce from '../../hooks/useDebounce'
 import { useQuery } from '@tanstack/react-query'
@@ -8,7 +8,7 @@ import DoctorCardList from '../doctorPage.tsx/DoctorCardList'
 import DoctorFilter from '../doctorPage.tsx/DoctorFilter'
 import DoctorSorting from '../doctorPage.tsx/DoctorSorting'
 import SpecialityFilter from '../doctorPage.tsx/SpecialityFilter'
-import DashboardDialog from '../AlertDialalog'
+import DashboardDialog from '../FormDialalog'
 
 type Props = {}
 
@@ -19,6 +19,7 @@ export default function DoctorPage({ }: Props) {
     const [sortOrder, setSortOrder] = useState('descending')
     const [allSpecialities, setAllSpecialities] = useState<string[]>([])
 
+    const [openFormDialog, setOpenFormDialog] = useState(false)
 
     //message
     const [successMessage, setSuccessMessage] = useState<null | string>(null)
@@ -53,12 +54,23 @@ export default function DoctorPage({ }: Props) {
     }, [doctors])
 
 
+
+
+    const handleClickOpen = () => {
+        setOpenFormDialog(true)
+    }
+
+    const handleClose = () => {
+        setOpenFormDialog(false)
+    }
+
+
     return (
         <Box>
             <Typography sx={{ paddingBottom: 3 }}>
                 Numbers of Doctors in the building: {doctors.length}
             </Typography>
-            <DoctorCardList doctors={doctors} />
+            <DoctorCardList doctors={doctors} handleClickOpen={handleClickOpen} />
             <Typography>NAME</Typography>
             <DoctorFilter
                 field='name'
@@ -84,8 +96,13 @@ export default function DoctorPage({ }: Props) {
                 setIsSuccessSubmit={setIsSuccessSubmit}
                 setErrorMessage={setErrorMessage}
                 setIsError={setIsError}
-
+                openFormDialog={openFormDialog}
+                handleClickOpen={handleClickOpen}
+                handleClose={handleClose}
             />
+            <Button variant='outlined' onClick={handleClickOpen}>
+                Open Dialog to create a new doctor
+            </Button>
             <Snackbar
                 open={isSuccessSubmit}
                 autoHideDuration={1500}
