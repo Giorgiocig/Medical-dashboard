@@ -8,16 +8,16 @@ import DoctorCardList from '../doctorPage.tsx/DoctorCardList'
 import DoctorFilter from '../doctorPage.tsx/DoctorFilter'
 import DoctorSorting from '../doctorPage.tsx/DoctorSorting'
 import SpecialityFilter from '../doctorPage.tsx/SpecialityFilter'
-import DashboardDialog from '../FormDialalog'
+import FormDialog from '../FormDialalog'
 
-type Props = {}
-
-export default function DoctorPage({ }: Props) {
+export default function DoctorPage() {
     const [name, setName] = useState('')
     const [speciality, setSpeciality] = useState('')
     const [sortBy, setSortBy] = useState('speciality')
     const [sortOrder, setSortOrder] = useState('descending')
     const [allSpecialities, setAllSpecialities] = useState<string[]>([])
+
+    const [selectedDoctor, setSelectedDoctor] = useState<null | IDoctor>(null)
 
     const [openFormDialog, setOpenFormDialog] = useState(false)
 
@@ -53,11 +53,9 @@ export default function DoctorPage({ }: Props) {
         fetchSpecialities()
     }, [doctors])
 
-
-
-
-    const handleClickOpen = () => {
+    const handleClickOpen = (doctor: IDoctor | null) => {
         setOpenFormDialog(true)
+        setSelectedDoctor(doctor)
     }
 
     const handleClose = () => {
@@ -91,7 +89,7 @@ export default function DoctorPage({ }: Props) {
                 options={allSpecialities}
             />
             <Typography>CREATE DOCTOR</Typography>
-            <DashboardDialog
+            <FormDialog
                 setSuccessMessage={setSuccessMessage}
                 setIsSuccessSubmit={setIsSuccessSubmit}
                 setErrorMessage={setErrorMessage}
@@ -99,8 +97,9 @@ export default function DoctorPage({ }: Props) {
                 openFormDialog={openFormDialog}
                 handleClickOpen={handleClickOpen}
                 handleClose={handleClose}
+                selectedDoctor={selectedDoctor}
             />
-            <Button variant='outlined' onClick={handleClickOpen}>
+            <Button variant='outlined' onClick={() => handleClickOpen(null)}>
                 Open Dialog to create a new doctor
             </Button>
             <Snackbar
