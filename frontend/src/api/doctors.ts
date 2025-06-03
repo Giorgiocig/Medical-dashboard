@@ -29,3 +29,18 @@ export const deleteDoctor = async (id: string) => {
   })
   return await res.json()
 }
+
+export const updateDoctor = async (id: string, doctor: IDoctor) => {
+  const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/doctors/${id}`, {
+    method: 'PATCH',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(doctor),
+  })
+  if (!res.ok) {
+    const errorData = await res.json().catch(() => ({}))
+    throw new Error(errorData.message || 'Failed to update doctor')
+  }
+  return await res.json()
+}
