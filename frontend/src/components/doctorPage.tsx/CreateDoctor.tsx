@@ -5,16 +5,17 @@ import FormControlLabel from '@mui/material/FormControlLabel'
 import FormControl from '@mui/material/FormControl'
 import FormLabel from '@mui/material/FormLabel'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { createDoctor } from '../../api/doctors'
-import { useState } from 'react'
-import type { ICreateDoctorProps } from '../../utilities/interfaces'
+import { createDoctor, updateDoctor } from '../../api/doctors'
+import { useEffect, useState } from 'react'
+import type { ICreateDoctorProps, IDoctor } from '../../utilities/interfaces'
 
 export default function CreateDoctor({
     dialogAction,
     setSuccessMessage,
     setIsSuccessSubmit,
     setErrorMessage,
-    setIsError
+    setIsError,
+    selectedDoctor,
 }: ICreateDoctorProps) {
     const [name, setName] = useState<string>('')
     const [surname, setSurname] = useState<string>('')
@@ -48,10 +49,55 @@ export default function CreateDoctor({
         },
     })
 
+    const updateDoctorMutation = useMutation({
+        mutationFn: (data: { id: string; values: IDoctor }) =>
+            updateDoctor(data.id, data.values),
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['doctors'] })
+            setSuccessMessage('Doctor updated successfully!')
+            setIsSuccessSubmit(true)
+            dialogAction()
+        },
+        onError: (error) => {
+            setErrorMessage(error.message)
+            setIsError(true)
+        },
+    })
+
+    useEffect(() => {
+        if (selectedDoctor) {
+            setName(selectedDoctor.name)
+            setSurname(selectedDoctor.surname)
+            setSpeciality(selectedDoctor.speciality)
+            setAvailableForOperatingRoom(selectedDoctor.availableForOperatingRoom)
+            setAvailableForClinic(selectedDoctor.availableForClinic)
+            setEmail(selectedDoctor.email)
+        }
+        return () => {
+            setName('')
+            setSurname('')
+            setSpeciality('')
+            setAvailableForOperatingRoom(false)
+            setAvailableForClinic(false)
+            setEmail('')
+        }
+    }, [selectedDoctor])
+
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-        console.log('Creating doctor with:')
         e.preventDefault()
-        createDoctorMutation.mutate()
+        const values = {
+            name,
+            surname,
+            speciality,
+            availableForOperatingRoom,
+            availableForClinic,
+            email,
+        }
+        if (selectedDoctor) {
+            updateDoctorMutation.mutate({ id: selectedDoctor._id as string, values })
+        } else {
+            createDoctorMutation.mutate()
+        }
     }
 
     return (
@@ -128,16 +174,22 @@ export default function CreateDoctor({
                 <Button
                     type='submit'
                     variant='contained'
-                    value={createDoctorMutation.isPending ? 'creating...' : 'Create'}
                     disabled={
                         !name ||
                         !surname ||
                         !speciality ||
                         !email ||
-                        createDoctorMutation.isPending
+                        createDoctorMutation.isPending ||
+                        updateDoctorMutation.isPending
                     }
                 >
-                    Create
+                    {selectedDoctor
+                        ? updateDoctorMutation.isPending
+                            ? 'Updating...'
+                            : 'Update'
+                        : createDoctorMutation.isPending
+                            ? 'Creating...'
+                            : 'Create'}
                 </Button>
             </FormControl>
         </form>
