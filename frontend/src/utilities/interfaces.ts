@@ -41,3 +41,29 @@ export interface IFormDialog {
   selectedDoctor: IDoctor | null
   handleClickOpen: (doctor: IDoctor) => void
 }
+
+type radioOption = {
+  radioOptionLabel: string
+  value: string
+}
+
+type radioButtonGroupOption = {
+  formLabel: string
+  value: string
+  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void
+  radioOptions: radioOption[]
+}
+
+export interface IRadioButtonGroupProps {
+  options: radioButtonGroupOption[]
+}
+
+type ITextFieldGroupOptions = {
+  label: string
+  value: string
+  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void
+}
+
+export interface ITextFieldGroupProps {
+  options: ITextFieldGroupOptions[]
+}
