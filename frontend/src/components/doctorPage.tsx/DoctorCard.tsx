@@ -6,6 +6,9 @@ import type { IDoctorCardProps } from '../../utilities/interfaces'
 import { Button } from '@mui/material'
 import { deleteDoctor } from '../../api/doctors'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
+import DeleteIcon from '@mui/icons-material/Delete';
+import ModeEditIcon from '@mui/icons-material/ModeEdit';
+
 
 export default function DoctorCard({
     name,
@@ -58,17 +61,19 @@ export default function DoctorCard({
                 </CardContent>
                 <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
                     <Button
+                        startIcon={<DeleteIcon />}
                         variant='outlined'
                         color='primary'
-                        sx={{ width: '30%' }}
+                        sx={{ padding: "0.5em 1em" }}
                         onClick={() => _id && deleteDoctorMutation.mutate(_id)}
                     >
                         Delete
                     </Button>
                     <Button
+                        startIcon={<ModeEditIcon />}
                         variant='outlined'
                         color='primary'
-                        sx={{ width: '30%' }}
+                        sx={{ padding: "0.5em 1em" }}
                         onClick={() =>
                             handleClickOpen({
                                 _id,

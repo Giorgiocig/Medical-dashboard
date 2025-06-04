@@ -10,8 +10,8 @@ export default function DoctorFilter({
     onChange: (value: string) => void
 }) {
     return (
-        <Box>
-            <Typography>FILTER {field}</Typography>
+        <Box sx={{ display: "flex", flexDirection: "column", }}>
+            <Typography sx={{ paddingBottom: 1 }}>FILTER {field}</Typography>
             <TextField
                 id={`filter-${field}`}
                 label={`filter-${field}`}

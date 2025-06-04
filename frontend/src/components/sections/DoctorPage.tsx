@@ -9,6 +9,7 @@ import DoctorFilter from '../doctorPage.tsx/DoctorFilter'
 import DoctorSorting from '../doctorPage.tsx/DoctorSorting'
 import SpecialityFilter from '../doctorPage.tsx/SpecialityFilter'
 import FormDialog from '../FormDialalog'
+import ArrowCircleRightIcon from '@mui/icons-material/ArrowCircleRight'
 
 export default function DoctorPage() {
     const [name, setName] = useState('')
@@ -26,7 +27,7 @@ export default function DoctorPage() {
     const [isSuccessSubmit, setIsSuccessSubmit] = useState<boolean>(false)
 
     const [errorMessage, setErrorMessage] = useState<null | string>(null)
-    const [isError, setIsError] = useState<boolean>(false);
+    const [isError, setIsError] = useState<boolean>(false)
 
     // debounce
     const debouncedName = useDebounce(name, 500)
@@ -62,33 +63,43 @@ export default function DoctorPage() {
         setOpenFormDialog(false)
     }
 
-
     return (
         <Box>
             <Typography sx={{ paddingBottom: 3 }}>
                 Numbers of Doctors in the building: {doctors.length}
             </Typography>
-            <DoctorCardList doctors={doctors} handleClickOpen={handleClickOpen} />
-            <Typography>NAME</Typography>
-            <DoctorFilter
-                field='name'
-                value={name}
-                onChange={(value) => setName(value)}
-            />
-            <DoctorSorting
-                fields={['speciality']}
-                value={sortBy}
-                onChange={(value) => setSortBy(value)}
-                orderValue={sortOrder}
-                onOrderChange={(orderValue) => setSortOrder(orderValue)}
-            />
-            <Typography>Speciality Filter</Typography>
-            <SpecialityFilter
-                value={speciality}
-                onChange={(value) => setSpeciality(value)}
-                options={allSpecialities}
-            />
-            <Typography>CREATE DOCTOR</Typography>
+            <Box sx={{ display: 'flex', paddingBottom: 2, gap: 4 }}>
+                <DoctorCardList doctors={doctors} handleClickOpen={handleClickOpen} />
+                <Box sx={{ display: 'flex', gap: 3, flexDirection: 'column' }}>
+                    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
+                        <DoctorFilter
+                            field='name'
+                            value={name}
+                            onChange={(value) => setName(value)}
+                        />
+                        <DoctorSorting
+                            fields={['speciality']}
+                            value={sortBy}
+                            onChange={(value) => setSortBy(value)}
+                            orderValue={sortOrder}
+                            onOrderChange={(orderValue) => setSortOrder(orderValue)}
+                        />
+                    </Box>
+                    <SpecialityFilter
+                        value={speciality}
+                        onChange={(value) => setSpeciality(value)}
+                        options={allSpecialities}
+                    />
+                </Box>
+            </Box>
+            <Button
+                sx={{ width: "55%" }}
+                variant='outlined'
+                onClick={() => handleClickOpen(null)}
+                endIcon={<ArrowCircleRightIcon />}
+            >
+                Create a new doctor
+            </Button>
             <FormDialog
                 setSuccessMessage={setSuccessMessage}
                 setIsSuccessSubmit={setIsSuccessSubmit}
@@ -99,9 +110,6 @@ export default function DoctorPage() {
                 handleClose={handleClose}
                 selectedDoctor={selectedDoctor}
             />
-            <Button variant='outlined' onClick={() => handleClickOpen(null)}>
-                Open Dialog to create a new doctor
-            </Button>
             <Snackbar
                 open={isSuccessSubmit}
                 autoHideDuration={1500}

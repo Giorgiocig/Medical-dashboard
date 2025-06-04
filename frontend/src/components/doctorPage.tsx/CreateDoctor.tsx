@@ -121,7 +121,7 @@ export default function CreateDoctor({
 
     return (
         <form onSubmit={handleSubmit} >
-            <Box sx={{ display: "flex", flexDirection: "column" }}>
+            <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
                 <FormLabel>Insert new doctor</FormLabel>
                 <TextFieldGroup options={[{
                     label: 'Name',

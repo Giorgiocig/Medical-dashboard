@@ -5,7 +5,7 @@ import type { IRadioButtonGroupProps } from "../../utilities/interfaces";
 export default function RadioButtonGroup({ options }: IRadioButtonGroupProps) {
 
     return (
-        <Box sx={{ display: "flex", flexDirection: "column" }}>
+        <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
             {options.map(((options) => (
                 <FormControl>
                     <FormLabel id="buttons-group-label">{options.formLabel}</FormLabel>
