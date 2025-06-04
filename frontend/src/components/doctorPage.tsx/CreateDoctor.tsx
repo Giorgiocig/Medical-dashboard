@@ -1,13 +1,11 @@
-import { Button, TextField, Typography } from '@mui/material'
-import Radio from '@mui/material/Radio'
-import RadioGroup from '@mui/material/RadioGroup'
-import FormControlLabel from '@mui/material/FormControlLabel'
-import FormControl from '@mui/material/FormControl'
+import { Box, Button } from '@mui/material'
 import FormLabel from '@mui/material/FormLabel'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { createDoctor, updateDoctor } from '../../api/doctors'
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import type { ICreateDoctorProps, IDoctor } from '../../utilities/interfaces'
+import RadioButtonGroup from './RadioButtonGroup'
+import TextFieldGroup from './TextFieldGroup'
 
 export default function CreateDoctor({
     dialogAction,
@@ -17,33 +15,26 @@ export default function CreateDoctor({
     setIsError,
     selectedDoctor,
 }: ICreateDoctorProps) {
-    const [name, setName] = useState<string>('')
-    const [surname, setSurname] = useState<string>('')
-    const [speciality, setSpeciality] = useState<string>('')
-    const [availableForOperatingRoom, setAvailableForOperatingRoom] =
-        useState<boolean>(false)
-    const [availableForClinic, setAvailableForClinic] = useState<boolean>(false)
-    const [email, setEmail] = useState<string>('')
+    const [formData, setFormData] = useState<IDoctor>({
+        name: '',
+        surname: '',
+        speciality: '',
+        email: '',
+        availableForOperatingRoom: false,
+        availableForClinic: false,
+    })
+
     const queryClient = useQueryClient()
 
     const createDoctorMutation = useMutation({
-        mutationFn: () =>
-            createDoctor({
-                name,
-                surname,
-                speciality,
-                availableForOperatingRoom,
-                availableForClinic,
-                email,
-            }),
+        mutationFn: () => createDoctor(formData),
         onSuccess: (data) => {
-            queryClient.invalidateQueries({ queryKey: ['doctors'] }),
-                setSuccessMessage(data.message),
-                setIsSuccessSubmit(true),
-                dialogAction()
+            queryClient.invalidateQueries({ queryKey: ['doctors'] })
+            setSuccessMessage(data.message)
+            setIsSuccessSubmit(true)
+            dialogAction()
         },
         onError: (error) => {
-            console.error('Doctor creation failed:', error)
             setErrorMessage(error.message)
             setIsError(true)
         },
@@ -66,119 +57,121 @@ export default function CreateDoctor({
 
     useEffect(() => {
         if (selectedDoctor) {
-            setName(selectedDoctor.name)
-            setSurname(selectedDoctor.surname)
-            setSpeciality(selectedDoctor.speciality)
-            setAvailableForOperatingRoom(selectedDoctor.availableForOperatingRoom)
-            setAvailableForClinic(selectedDoctor.availableForClinic)
-            setEmail(selectedDoctor.email)
-        }
-        return () => {
-            setName('')
-            setSurname('')
-            setSpeciality('')
-            setAvailableForOperatingRoom(false)
-            setAvailableForClinic(false)
-            setEmail('')
+            const {
+                name,
+                surname,
+                speciality,
+                availableForOperatingRoom,
+                availableForClinic,
+                email,
+            } = selectedDoctor
+
+            setFormData({
+                name,
+                surname,
+                speciality,
+                availableForOperatingRoom,
+                availableForClinic,
+                email,
+            })
+        } else {
+            setFormData({
+                name: '',
+                surname: '',
+                speciality: '',
+                email: '',
+                availableForOperatingRoom: false,
+                availableForClinic: false,
+            })
         }
     }, [selectedDoctor])
 
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
-        const values = {
-            name,
-            surname,
-            speciality,
-            availableForOperatingRoom,
-            availableForClinic,
-            email,
-        }
         if (selectedDoctor) {
-            updateDoctorMutation.mutate({ id: selectedDoctor._id as string, values })
+            updateDoctorMutation.mutate({
+                id: selectedDoctor._id as string,
+                values: formData,
+            })
         } else {
             createDoctorMutation.mutate()
         }
     }
 
+    const handleChange = useCallback(
+        (field: keyof typeof formData) => (e: React.ChangeEvent<HTMLInputElement>) => {
+            setFormData((prev) => ({
+                ...prev,
+                [field]: e.target.value,
+            }))
+        },
+        [],
+    )
+
+    const handleRadioChange = useCallback(
+        (field: keyof typeof formData) =>
+            (e: React.ChangeEvent<HTMLInputElement>) => {
+                setFormData((prev) => ({
+                    ...prev,
+                    [field]: e.target.value === 'true',
+                }))
+            },
+        [],
+    )
+
     return (
-        <form onSubmit={handleSubmit}>
-            <FormControl>
-                <FormLabel id='demo-radio-buttons-group-label'>
-                    Insert new doctor
-                </FormLabel>
-                <TextField
-                    id='outlined-basic'
-                    label='Name'
-                    variant='outlined'
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
+        <form onSubmit={handleSubmit} >
+            <Box sx={{ display: "flex", flexDirection: "column" }}>
+                <FormLabel>Insert new doctor</FormLabel>
+                <TextFieldGroup options={[{
+                    label: 'Name',
+                    value: formData.name,
+                    onChange: handleChange('name')
+                }, {
+                    label: 'Surname',
+                    value: formData.surname,
+                    onChange: handleChange('surname')
+                }, {
+                    label: 'Speciality',
+                    value: formData.speciality,
+                    onChange: handleChange('speciality')
+                }, {
+                    label: 'Email',
+                    value: formData.email,
+                    onChange: handleChange('email')
+                }]}
                 />
-                <TextField
-                    id='outlined-basic'
-                    label='Surname'
-                    variant='outlined'
-                    value={surname}
-                    onChange={(e) => setSurname(e.target.value)}
+                <RadioButtonGroup
+                    options={[
+                        {
+                            formLabel: 'Available for operating Room',
+                            value: formData.availableForOperatingRoom.toString(),
+                            onChange: handleRadioChange('availableForOperatingRoom'),
+                            radioOptions: [
+                                { radioOptionLabel: 'available', value: 'true' },
+                                { radioOptionLabel: 'not available', value: 'false' },
+                            ],
+                        },
+                        {
+                            formLabel: 'Available for Clinic',
+                            value: formData.availableForClinic.toString(),
+                            onChange: handleRadioChange('availableForClinic'),
+                            radioOptions: [
+                                { radioOptionLabel: 'available', value: 'true' },
+                                { radioOptionLabel: 'not available', value: 'false' },
+                            ],
+                        },
+                    ]}
                 />
-                <TextField
-                    id='outlined-basic'
-                    label='Speciality'
-                    variant='outlined'
-                    value={speciality}
-                    onChange={(e) => setSpeciality(e.target.value)}
-                />
-                <TextField
-                    id='outlined-basic'
-                    label='email'
-                    variant='outlined'
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                />
-                <Typography>available for operating room</Typography>
-                <RadioGroup
-                    name='radio-buttons-group'
-                    value={availableForOperatingRoom.toString()}
-                    onChange={(e) =>
-                        setAvailableForOperatingRoom(e.target.value === 'true')
-                    }
-                >
-                    <FormControlLabel
-                        value='true'
-                        control={<Radio />}
-                        label='Available'
-                    />
-                    <FormControlLabel
-                        value='false'
-                        control={<Radio />}
-                        label='Not Available'
-                    />
-                </RadioGroup>
-                <Typography>available for clinic </Typography>
-                <RadioGroup
-                    aria-labelledby='"available for clinic"'
-                    value={availableForClinic.toString()}
-                    name='radio-buttons-group'
-                    onChange={(e) => setAvailableForClinic(e.target.value === 'true')}
-                >
-                    <FormControlLabel
-                        value='true'
-                        control={<Radio />}
-                        label='Available'
-                    />
-                    <FormControlLabel
-                        value='false'
-                        control={<Radio />}
-                        label='Not Available'
-                    />
-                </RadioGroup>
+
                 <Button
                     type='submit'
                     variant='contained'
                     disabled={
-                        !name ||
-                        !surname ||
-                        !speciality ||
-                        !email ||
+                        !formData.name ||
+                        !formData.surname ||
+                        !formData.speciality ||
+                        !formData.email ||
                         createDoctorMutation.isPending ||
                         updateDoctorMutation.isPending
                     }
@@ -191,7 +184,7 @@ export default function CreateDoctor({
                             ? 'Creating...'
                             : 'Create'}
                 </Button>
-            </FormControl>
+            </Box>
         </form>
     )
 }
