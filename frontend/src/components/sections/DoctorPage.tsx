@@ -32,26 +32,19 @@ export default function DoctorPage() {
     // debounce
     const debouncedName = useDebounce(name, 500)
 
-    const doctorsQuery = useQuery({
-        queryKey: ['doctors', { name, speciality, sortBy, sortOrder }],
-        queryFn: () => getDoctors({ debouncedName, speciality, sortBy, sortOrder }),
-    })
+    const queryOptions = {
+        queryKey: ['doctors', { name: debouncedName, speciality, sortBy, sortOrder }],
+        queryFn: () => getDoctors({ name: debouncedName, speciality, sortBy, sortOrder }),
+        keepPreviousData: true,
+    }
+
+    const doctorsQuery = useQuery(queryOptions)
 
     const doctors = doctorsQuery.data ?? []
 
     useEffect(() => {
-        const fetchSpecialities = async () => {
-            try {
-                const doctors = await getDoctors({})
-                const specialities = doctors
-                    .map((doctor: IDoctor) => doctor.speciality)
-                    .sort()
-                setAllSpecialities(specialities)
-            } catch (error) {
-                console.error('Errore nel fetch delle specialità:', error)
-            }
-        }
-        fetchSpecialities()
+        const specialities = doctors.map((doctor: IDoctor) => doctor.speciality)
+        setAllSpecialities(specialities)
     }, [doctors])
 
     const handleClickOpen = (doctor: IDoctor | null) => {
