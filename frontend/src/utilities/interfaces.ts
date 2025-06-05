@@ -67,3 +67,13 @@ type ITextFieldGroupOptions = {
 export interface ITextFieldGroupProps {
   options: ITextFieldGroupOptions[]
 }
+
+export interface DoctorFilterPopoverProps {
+  title: string
+  children: React.ReactNode
+}
+
+export interface TooltipIconBtnProps {
+  title: string
+  action: () => void
+}
