@@ -1,3 +1,4 @@
+import mongoose from 'mongoose'
 import { Doctor } from '../db/models/doctors.js'
 import {
   listAllDoctors,
@@ -56,6 +57,10 @@ export function doctorsRoutes(app) {
         doctor,
       })
     } catch (error) {
+      // check to send error to client
+      if (error instanceof mongoose.Error.ValidationError) {
+        return res.status(400).json({ message: error.message })
+      }
       console.log('error while creating', error)
       return res.status(500).end()
     }
