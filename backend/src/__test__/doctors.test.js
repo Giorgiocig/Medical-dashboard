@@ -186,9 +186,10 @@ describe('update doctor', () => {
     const updatedDoctor = await Doctor.findById(createdSampleDoctors[0]._id)
     expect(updatedDoctor.surname).toEqual('rossi')
   })
-  test('should fail if the id does not exist', async () => {
-    const doctor = await updateDoctor('0000000000000000', { name: 'test' })
-    expect(doctor).toBeNull()
+  test('should throw error if the id is invalid', async () => {
+    await expect(
+      updateDoctor('0000000000000000', { name: 'test' }),
+    ).rejects.toThrow('Invalid doctor ID')
   })
 })
 
