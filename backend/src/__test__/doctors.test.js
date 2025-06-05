@@ -51,6 +51,52 @@ describe('creating doctor', () => {
       expect(error.message).toContain('`name` is required')
     }
   })
+  test('without surname should fail', async () => {
+    const doctor = {
+      name: 'hello',
+      speciality: 'Orto',
+      availableForOperatingRoom: true,
+      availableForClinic: false,
+      email: 'gmail@com',
+    }
+    try {
+      await createDoctor(doctor)
+    } catch (error) {
+      expect(error).toBeInstanceOf(mongoose.Error.ValidationError)
+      expect(error.message).toContain('`surname` is required')
+    }
+  })
+  test('without email should fail', async () => {
+    const doctor = {
+      name: 'ciao',
+      surname: 'hello',
+      speciality: 'Orto',
+      availableForOperatingRoom: true,
+      availableForClinic: false,
+    }
+    try {
+      await createDoctor(doctor)
+    } catch (error) {
+      expect(error).toBeInstanceOf(mongoose.Error.ValidationError)
+      expect(error.message).toContain('`email` is required')
+    }
+  })
+  test('email without @ should fail', async () => {
+    const doctor = {
+      name: 'ciao',
+      surname: 'hello',
+      speciality: 'Orto',
+      availableForOperatingRoom: true,
+      availableForClinic: false,
+      email: 'gmailcom',
+    }
+    try {
+      await createDoctor(doctor)
+    } catch (error) {
+      expect(error).toBeDefined()
+      expect(error.message).toContain("Not valid email.'@' is missing")
+    }
+  })
   test('with equal email should fail', async () => {
     try {
       for (const doctor of sampleDoctorsWithEqualEmail) {
