@@ -1,9 +1,7 @@
 import {
     Box,
     Button,
-    IconButton,
     Snackbar,
-    Tooltip,
     Typography,
 } from '@mui/material'
 import { useEffect, useState } from 'react'
@@ -18,7 +16,7 @@ import SpecialityFilter from '../doctorPage.tsx/SpecialityFilter'
 import FormDialog from '../FormDialalog'
 import ArrowCircleRightIcon from '@mui/icons-material/ArrowCircleRight'
 import DoctorFilterPopover from '../doctorPage.tsx/DoctorFilterPopover'
-import FeedbackIcon from '@mui/icons-material/Feedback'
+import TooltipIconBtn from '../TooltipIconBtn'
 
 export default function DoctorPage() {
     const [name, setName] = useState('')
@@ -93,11 +91,7 @@ export default function DoctorPage() {
                         />
                     </DoctorFilterPopover>
                     {name && (
-                        <Tooltip title='cancel filter'>
-                            <IconButton onClick={() => setName('')}>
-                                <FeedbackIcon />
-                            </IconButton>
-                        </Tooltip>
+                        <TooltipIconBtn title='cancel filter' action={() => setName("")} />
                     )}
                 </Box>
                 <Box sx={{ display: 'flex', width: '80%' }}>
@@ -111,10 +105,7 @@ export default function DoctorPage() {
                         />
                     </DoctorFilterPopover>
                     {sortOrder === 'ascending' && (
-                        <Button
-                            endIcon={<FeedbackIcon />}
-                            onClick={() => setSortOrder('descending')}
-                        />
+                        <TooltipIconBtn title='cancel filter' action={() => setSortOrder('descending')} />
                     )}
                 </Box>
                 <Box sx={{ display: 'flex', width: '80%' }}>
@@ -126,10 +117,7 @@ export default function DoctorPage() {
                         />
                     </DoctorFilterPopover>
                     {speciality && (
-                        <Button
-                            endIcon={<FeedbackIcon />}
-                            onClick={() => setSpeciality('')}
-                        />
+                        <TooltipIconBtn title='cancel filter' action={() => setSpeciality('')} />
                     )}
                 </Box>
             </Box>
