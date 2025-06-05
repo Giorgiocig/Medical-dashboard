@@ -2,11 +2,7 @@ import * as React from 'react'
 import Popover from '@mui/material/Popover'
 import Button from '@mui/material/Button'
 import { Box } from '@mui/material'
-
-interface DoctorFilterPopoverProps {
-    title: string,
-    children: React.ReactNode
-}
+import type { DoctorFilterPopoverProps } from '../../utilities/interfaces'
 
 export default function DoctorFilterPopover({
     title,
@@ -27,7 +23,12 @@ export default function DoctorFilterPopover({
 
     return (
         <div>
-            <Button aria-describedby={id} variant='contained' onClick={handleClick}>
+            <Button
+                aria-describedby={id}
+                variant='contained'
+                onClick={handleClick}
+                sx={{ width: '15rem' }}
+            >
                 {title}
             </Button>
             <Popover
