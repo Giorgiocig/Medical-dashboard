@@ -17,6 +17,7 @@ import FormDialog from '../FormDialalog'
 import ArrowCircleRightIcon from '@mui/icons-material/ArrowCircleRight'
 import DoctorFilterPopover from '../doctorPage.tsx/DoctorFilterPopover'
 import TooltipIconBtn from '../TooltipIconBtn'
+import VerticalBarChart from '../doctorPage.tsx/VerticalBarsChart'
 
 export default function DoctorPage() {
     const [name, setName] = useState('')
@@ -66,69 +67,86 @@ export default function DoctorPage() {
     const handleClose = () => {
         setOpenFormDialog(false)
     }
-    console.log(speciality)
+
+    //graph calculation
+    const extractSpecialityRecurrence = () => {
+        let specialitiesObj: { [key: string]: number } = {}
+        for (const doctor of doctors) {
+            if (doctor.speciality in specialitiesObj) specialitiesObj[doctor.speciality] += 1
+            else { specialitiesObj[doctor.speciality] = 1 }
+        }
+        return specialitiesObj
+    }
+
+    const extractedSpecialities = extractSpecialityRecurrence()
+
     return (
         <Box>
-            <Typography sx={{ paddingBottom: 3 }}>
-                Numbers of Doctors in the building: {doctors.length}
-            </Typography>
-            <Box
-                sx={{
-                    display: 'flex',
-                    flexDirection: 'column',
-                    alignItems: 'center',
-                    paddingBottom: 2,
-                    gap: 2,
-                }}
-            >
-                <DoctorCardList doctors={doctors} handleClickOpen={handleClickOpen} />
-                <Box sx={{ display: 'flex', width: '80%' }}>
-                    <DoctorFilterPopover title='filter by name'>
-                        <DoctorFilter
-                            field='name'
-                            value={name}
-                            onChange={(value) => setName(value)}
-                        />
-                    </DoctorFilterPopover>
-                    {name && (
-                        <TooltipIconBtn title='cancel filter' action={() => setName("")} />
-                    )}
+            <Box sx={{ display: "flex" }}>
+                <Box>
+                    <Typography sx={{ paddingBottom: 3 }}>
+                        Numbers of Doctors in the building: {doctors.length}
+                    </Typography>
+                    <Box
+                        sx={{
+                            display: 'flex',
+                            flexDirection: 'column',
+                            alignItems: 'center',
+                            paddingBottom: 2,
+                            gap: 2,
+                        }}
+                    >
+                        <DoctorCardList doctors={doctors} handleClickOpen={handleClickOpen} />
+                        <Box sx={{ display: 'flex', width: '80%' }}>
+                            <DoctorFilterPopover title='filter by name'>
+                                <DoctorFilter
+                                    field='name'
+                                    value={name}
+                                    onChange={(value) => setName(value)}
+                                />
+                            </DoctorFilterPopover>
+                            {name && (
+                                <TooltipIconBtn title='cancel filter' action={() => setName("")} />
+                            )}
+                        </Box>
+                        <Box sx={{ display: 'flex', width: '80%' }}>
+                            <DoctorFilterPopover title='ascending / descending'>
+                                <DoctorSorting
+                                    fields={['speciality']}
+                                    value={sortBy}
+                                    onChange={(value) => setSortBy(value)}
+                                    orderValue={sortOrder}
+                                    onOrderChange={(orderValue) => setSortOrder(orderValue)}
+                                />
+                            </DoctorFilterPopover>
+                            {sortOrder === 'ascending' && (
+                                <TooltipIconBtn title='cancel filter' action={() => setSortOrder('descending')} />
+                            )}
+                        </Box>
+                        <Box sx={{ display: 'flex', width: '80%' }}>
+                            <DoctorFilterPopover title='filter by speciality'>
+                                <SpecialityFilter
+                                    value={speciality}
+                                    onChange={(value) => setSpeciality(value)}
+                                    options={allSpecialities}
+                                />
+                            </DoctorFilterPopover>
+                            {speciality && (
+                                <TooltipIconBtn title='cancel filter' action={() => setSpeciality('')} />
+                            )}
+                        </Box>
+                    </Box>
+                    <Button
+                        sx={{ width: '100%' }}
+                        variant='outlined'
+                        onClick={() => handleClickOpen(null)}
+                        endIcon={<ArrowCircleRightIcon />}
+                    >
+                        Create a new doctor
+                    </Button>
                 </Box>
-                <Box sx={{ display: 'flex', width: '80%' }}>
-                    <DoctorFilterPopover title='ascending / descending'>
-                        <DoctorSorting
-                            fields={['speciality']}
-                            value={sortBy}
-                            onChange={(value) => setSortBy(value)}
-                            orderValue={sortOrder}
-                            onOrderChange={(orderValue) => setSortOrder(orderValue)}
-                        />
-                    </DoctorFilterPopover>
-                    {sortOrder === 'ascending' && (
-                        <TooltipIconBtn title='cancel filter' action={() => setSortOrder('descending')} />
-                    )}
-                </Box>
-                <Box sx={{ display: 'flex', width: '80%' }}>
-                    <DoctorFilterPopover title='filter by speciality'>
-                        <SpecialityFilter
-                            value={speciality}
-                            onChange={(value) => setSpeciality(value)}
-                            options={allSpecialities}
-                        />
-                    </DoctorFilterPopover>
-                    {speciality && (
-                        <TooltipIconBtn title='cancel filter' action={() => setSpeciality('')} />
-                    )}
-                </Box>
+                <VerticalBarChart sampleData={extractedSpecialities} />
             </Box>
-            <Button
-                sx={{ width: '100%' }}
-                variant='outlined'
-                onClick={() => handleClickOpen(null)}
-                endIcon={<ArrowCircleRightIcon />}
-            >
-                Create a new doctor
-            </Button>
             <FormDialog
                 setSuccessMessage={setSuccessMessage}
                 setIsSuccessSubmit={setIsSuccessSubmit}
