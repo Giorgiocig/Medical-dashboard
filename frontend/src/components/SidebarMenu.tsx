@@ -57,7 +57,7 @@ export default function SidebarMenu() {
                 value={value}
                 onChange={handleChange}
                 aria-label="Vertical tabs example"
-                sx={{ borderRight: 1, borderColor: 'divider' }}
+                sx={{ borderRight: 1, borderColor: 'divider', width: "15rem" }}
             >
                 <Tab label="Doctors" {...a11yProps(0)} />
                 <Tab label="Patiens" {...a11yProps(1)} />
