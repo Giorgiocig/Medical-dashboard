@@ -18,6 +18,7 @@ import ArrowCircleRightIcon from '@mui/icons-material/ArrowCircleRight'
 import DoctorFilterPopover from '../doctorPage.tsx/DoctorFilterPopover'
 import TooltipIconBtn from '../TooltipIconBtn'
 import VerticalBarChart from '../doctorPage.tsx/VerticalBarsChart'
+import { extractAvailableForClinic, extractSpecialityRecurrence } from '../../utilities/helpers'
 
 export default function DoctorPage() {
     const [name, setName] = useState('')
@@ -51,7 +52,6 @@ export default function DoctorPage() {
     }
 
     const doctorsQuery = useQuery(queryOptions)
-
     const doctors = doctorsQuery.data ?? []
 
     useEffect(() => {
@@ -68,25 +68,17 @@ export default function DoctorPage() {
         setOpenFormDialog(false)
     }
 
-    //graph calculation
-    const extractSpecialityRecurrence = () => {
-        let specialitiesObj: { [key: string]: number } = {}
-        for (const doctor of doctors) {
-            if (doctor.speciality in specialitiesObj) specialitiesObj[doctor.speciality] += 1
-            else { specialitiesObj[doctor.speciality] = 1 }
-        }
-        return specialitiesObj
-    }
-
-    const extractedSpecialities = extractSpecialityRecurrence()
+    const extractedSpecialities = extractSpecialityRecurrence(doctors)
+    const extractedAvailableForClinic = extractAvailableForClinic(doctors, "availableForClinic")
+    const extractedAvailableForOperatingRoom = extractAvailableForClinic(doctors, "availableForOperatingRoom")
 
     return (
         <Box>
-            <Box sx={{ display: "flex" }}>
+            <Typography sx={{ paddingBottom: 6 }}>
+                Numbers of Doctors in the building: {doctors.length}
+            </Typography>
+            <Box sx={{ display: "flex", gap: 6 }}>
                 <Box>
-                    <Typography sx={{ paddingBottom: 3 }}>
-                        Numbers of Doctors in the building: {doctors.length}
-                    </Typography>
                     <Box
                         sx={{
                             display: 'flex',
@@ -145,7 +137,11 @@ export default function DoctorPage() {
                         Create a new doctor
                     </Button>
                 </Box>
-                <VerticalBarChart sampleData={extractedSpecialities} />
+                <Box sx={{ display: "flex", flexWrap: "wrap", gap: 2 }}>
+                    <VerticalBarChart text={"specialities"} sampleData={extractedSpecialities} />
+                    <VerticalBarChart text={"available For Clinic"} sampleData={extractedAvailableForClinic} />
+                    <VerticalBarChart text={"available For OperatingRoom"} sampleData={extractedAvailableForOperatingRoom} />
+                </Box>
             </Box>
             <FormDialog
                 setSuccessMessage={setSuccessMessage}
