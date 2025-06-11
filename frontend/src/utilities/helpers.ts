@@ -62,6 +62,9 @@ export const graphOptions = (text: string) => {
     scales: {
       y: {
         beginAtZero: true,
+        ticks: {
+          stepSize: 1,
+        },
       },
     },
   }
