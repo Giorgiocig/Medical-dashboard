@@ -13,7 +13,7 @@ export const extractSpecialityRecurrence = (object: IDoctor[]) => {
   return specialitiesObj
 }
 
-export const extractAvailableForClinic = (
+export const countDoctorAvailabilityByKey = (
   object: IDoctor[],
   key: keyof IDoctor,
 ) => {
