@@ -18,7 +18,8 @@ import ArrowCircleRightIcon from '@mui/icons-material/ArrowCircleRight'
 import DoctorFilterPopover from '../doctorPage.tsx/DoctorFilterPopover'
 import TooltipIconBtn from '../TooltipIconBtn'
 import VerticalBarChart from '../doctorPage.tsx/VerticalBarsChart'
-import { extractAvailableForClinic, extractSpecialityRecurrence } from '../../utilities/helpers'
+import { extractSpecialityRecurrence } from '../../utilities/helpers'
+import { useCountDoctorAvailabilityByKey } from '../../hooks/useCountDoctorAvailabilityByKey'
 
 export default function DoctorPage() {
     const [name, setName] = useState('')
@@ -69,8 +70,8 @@ export default function DoctorPage() {
     }
 
     const extractedSpecialities = extractSpecialityRecurrence(doctors)
-    const extractedAvailableForClinic = extractAvailableForClinic(doctors, "availableForClinic")
-    const extractedAvailableForOperatingRoom = extractAvailableForClinic(doctors, "availableForOperatingRoom")
+    const extractedAvailableForClinic = useCountDoctorAvailabilityByKey(doctors, "availableForClinic")
+    const extractedAvailableForOperatingRoom = useCountDoctorAvailabilityByKey(doctors, "availableForOperatingRoom")
 
     return (
         <Box>
