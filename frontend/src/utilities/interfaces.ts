@@ -54,6 +54,11 @@ type radioButtonGroupOption = {
   radioOptions: radioOption[]
 }
 
+export type availableForClinicObj = {
+  available: number
+  not_available: number
+}
+
 export interface IRadioButtonGroupProps {
   options: radioButtonGroupOption[]
 }
