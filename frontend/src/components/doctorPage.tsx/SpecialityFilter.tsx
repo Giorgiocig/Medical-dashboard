@@ -1,24 +1,34 @@
 import TextField from '@mui/material/TextField';
 import Autocomplete from '@mui/material/Autocomplete';
 import { Box, Typography } from '@mui/material';
+import { useEffect, useState } from 'react';
+import type { IDoctor } from '../../utilities/interfaces';
 
 
 export default function SpecialityFilter({
     value,
     onChange,
-    options,
+    doctors
 }: {
     value: string
     onChange: (value: string) => void
-    options: string[]
+    doctors: IDoctor[]
 }) {
+    const [allSpecialities, setAllSpecialities] = useState<string[]>([])
+
+    useEffect(() => {
+        const specialities = doctors.map((doctor: IDoctor) => doctor.speciality)
+        setAllSpecialities(specialities)
+    }, [doctors])
+
+
     return (
         <Box sx={{ display: "flex", flexDirection: "column" }}>
             <Typography sx={{ paddingBottom: 1 }}>FILTER SPECIALITY</Typography>
             <Autocomplete
                 value={value}
                 onChange={(_, newValue) => onChange(newValue ?? '')}
-                options={options}
+                options={allSpecialities}
                 renderInput={(params) => (
                     <TextField {...params} label="Speciality" variant="outlined" />
                 )}
