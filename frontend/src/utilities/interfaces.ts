@@ -33,10 +33,6 @@ export interface ICreateDoctorProps {
 }
 
 export interface IFormDialog {
-  setSuccessMessage: (message: string) => void
-  setIsSuccessSubmit: (value: boolean) => void
-  setErrorMessage: (message: string) => void
-  setIsError: (value: boolean) => void
   handleClose: () => void
   openFormDialog: boolean
   selectedDoctor: IDoctor | null
