@@ -29,6 +29,7 @@ export interface ICreateDoctorProps {
   setErrorMessage: (message: string) => void
   setIsError: (value: boolean) => void
   selectedDoctor: IDoctor | null
+  specialities: { [key: string]: any }
 }
 
 export interface IFormDialog {
@@ -40,6 +41,7 @@ export interface IFormDialog {
   openFormDialog: boolean
   selectedDoctor: IDoctor | null
   handleClickOpen: (doctor: IDoctor) => void
+  specialities: { [key: string]: any }
 }
 
 type radioOption = {
