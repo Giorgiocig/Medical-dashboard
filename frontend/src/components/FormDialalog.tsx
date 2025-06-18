@@ -12,6 +12,7 @@ export default function FormDialog({
     handleClose,
     openFormDialog,
     selectedDoctor,
+    specialities
 }: IFormDialog) {
     return (
         <>
@@ -30,6 +31,7 @@ export default function FormDialog({
                         setErrorMessage={setErrorMessage}
                         setIsError={setIsError}
                         selectedDoctor={selectedDoctor}
+                        specialities={specialities}
                     />
                 </DialogContent>
             </Dialog>
