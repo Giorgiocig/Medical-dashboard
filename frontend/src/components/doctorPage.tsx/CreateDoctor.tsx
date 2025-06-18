@@ -6,6 +6,7 @@ import { useCallback, useEffect, useState } from 'react'
 import type { ICreateDoctorProps, IDoctor } from '../../utilities/interfaces'
 import RadioButtonGroup from './RadioButtonGroup'
 import TextFieldGroup from './TextFieldGroup'
+import BasicSelect from './SelectSpeciality'
 
 export default function CreateDoctor({
     dialogAction,
@@ -14,6 +15,7 @@ export default function CreateDoctor({
     setErrorMessage,
     setIsError,
     selectedDoctor,
+    specialities
 }: ICreateDoctorProps) {
     const [formData, setFormData] = useState<IDoctor>({
         name: '',
@@ -132,15 +134,13 @@ export default function CreateDoctor({
                     value: formData.surname,
                     onChange: handleChange('surname')
                 }, {
-                    label: 'Speciality',
-                    value: formData.speciality,
-                    onChange: handleChange('speciality')
-                }, {
                     label: 'Email',
                     value: formData.email,
                     onChange: handleChange('email')
                 }]}
                 />
+                <BasicSelect specialities={specialities} value={formData.speciality}
+                    onChange={handleChange('speciality')} />
                 <RadioButtonGroup
                     options={[
                         {
@@ -170,8 +170,8 @@ export default function CreateDoctor({
                     disabled={
                         !formData.name ||
                         !formData.surname ||
-                        !formData.speciality ||
                         !formData.email ||
+                        !formData.speciality ||
                         createDoctorMutation.isPending ||
                         updateDoctorMutation.isPending
                     }
@@ -185,6 +185,6 @@ export default function CreateDoctor({
                             : 'Create'}
                 </Button>
             </Box>
-        </form>
+        </form >
     )
 }
