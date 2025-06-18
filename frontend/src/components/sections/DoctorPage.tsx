@@ -2,43 +2,37 @@ import {
     Box,
     Button,
     Snackbar,
+    TextField,
     Typography,
 } from '@mui/material'
 import { useEffect, useState } from 'react'
 import useDebounce from '../../hooks/useDebounce'
-import { useQuery } from '@tanstack/react-query'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { getDoctors } from '../../api/doctors'
 import type { IDoctor } from '../../utilities/interfaces'
 import DoctorCardList from '../doctorPage.tsx/DoctorCardList'
-import DoctorFilter from '../doctorPage.tsx/DoctorFilter'
-import DoctorSorting from '../doctorPage.tsx/DoctorSorting'
-import SpecialityFilter from '../doctorPage.tsx/SpecialityFilter'
 import FormDialog from '../FormDialalog'
 import ArrowCircleRightIcon from '@mui/icons-material/ArrowCircleRight'
-import DoctorFilterPopover from '../doctorPage.tsx/DoctorFilterPopover'
-import TooltipIconBtn from '../TooltipIconBtn'
 import VerticalBarChart from '../doctorPage.tsx/VerticalBarsChart'
 import { extractSpecialityRecurrence } from '../../utilities/helpers'
 import { useCountDoctorAvailabilityByKey } from '../../hooks/useCountDoctorAvailabilityByKey'
+import { createSpeciality, getSpecialities } from '../../api/specialities'
+import DoctorFiltersSection from '../doctorPage.tsx/DoctorFiltersSection'
 
 export default function DoctorPage() {
     const [name, setName] = useState('')
-    const [speciality, setSpeciality] = useState('')
+    const [speciality, setSpeciality] = useState("")
+    const [specialities, setSpecialities] = useState<any>('')
     const [sortBy, setSortBy] = useState('speciality')
     const [sortOrder, setSortOrder] = useState('descending')
-    const [allSpecialities, setAllSpecialities] = useState<string[]>([])
-
     const [selectedDoctor, setSelectedDoctor] = useState<null | IDoctor>(null)
-
     const [openFormDialog, setOpenFormDialog] = useState(false)
-
+    const [specialityTextField, setSpecialityTextField] = useState<string>('')
     //message
     const [successMessage, setSuccessMessage] = useState<null | string>(null)
     const [isSuccessSubmit, setIsSuccessSubmit] = useState<boolean>(false)
-
     const [errorMessage, setErrorMessage] = useState<null | string>(null)
     const [isError, setIsError] = useState<boolean>(false)
-
     // debounce
     const debouncedName = useDebounce(name, 500)
 
@@ -51,14 +45,8 @@ export default function DoctorPage() {
             getDoctors({ name: debouncedName, speciality, sortBy, sortOrder }),
         keepPreviousData: true,
     }
-
     const doctorsQuery = useQuery(queryOptions)
     const doctors = doctorsQuery.data ?? []
-
-    useEffect(() => {
-        const specialities = doctors.map((doctor: IDoctor) => doctor.speciality)
-        setAllSpecialities(specialities)
-    }, [doctors])
 
     const handleClickOpen = (doctor: IDoctor | null) => {
         setOpenFormDialog(true)
@@ -72,6 +60,29 @@ export default function DoctorPage() {
     const extractedSpecialities = extractSpecialityRecurrence(doctors)
     const extractedAvailableForClinic = useCountDoctorAvailabilityByKey(doctors, "availableForClinic")
     const extractedAvailableForOperatingRoom = useCountDoctorAvailabilityByKey(doctors, "availableForOperatingRoom")
+
+    const queryClient = useQueryClient()
+
+    const createSpecialityMutation = useMutation({
+        mutationFn: (data: string) => createSpeciality(data),
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['specialities'] })
+        },
+    })
+
+    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault()
+        createSpecialityMutation.mutate(specialityTextField)
+    }
+
+    useEffect(() => {
+        const fetchData = async () => {
+            const response = await getSpecialities()
+            setSpecialities(response)
+        }
+        fetchData()
+    }, [])
+
 
     return (
         <Box>
@@ -90,44 +101,45 @@ export default function DoctorPage() {
                         }}
                     >
                         <DoctorCardList doctors={doctors} handleClickOpen={handleClickOpen} />
-                        <Box sx={{ display: 'flex', width: '80%' }}>
-                            <DoctorFilterPopover title='filter by name'>
-                                <DoctorFilter
-                                    field='name'
-                                    value={name}
-                                    onChange={(value) => setName(value)}
-                                />
-                            </DoctorFilterPopover>
-                            {name && (
-                                <TooltipIconBtn title='cancel filter' action={() => setName("")} />
-                            )}
-                        </Box>
-                        <Box sx={{ display: 'flex', width: '80%' }}>
-                            <DoctorFilterPopover title='ascending / descending'>
-                                <DoctorSorting
-                                    fields={['speciality']}
-                                    value={sortBy}
-                                    onChange={(value) => setSortBy(value)}
-                                    orderValue={sortOrder}
-                                    onOrderChange={(orderValue) => setSortOrder(orderValue)}
-                                />
-                            </DoctorFilterPopover>
-                            {sortOrder === 'ascending' && (
-                                <TooltipIconBtn title='cancel filter' action={() => setSortOrder('descending')} />
-                            )}
-                        </Box>
-                        <Box sx={{ display: 'flex', width: '80%' }}>
-                            <DoctorFilterPopover title='filter by speciality'>
-                                <SpecialityFilter
-                                    value={speciality}
-                                    onChange={(value) => setSpeciality(value)}
-                                    options={allSpecialities}
-                                />
-                            </DoctorFilterPopover>
-                            {speciality && (
-                                <TooltipIconBtn title='cancel filter' action={() => setSpeciality('')} />
-                            )}
-                        </Box>
+                        <form onSubmit={handleSubmit}>
+                            <TextField
+                                label="add new speciality"
+                                variant='outlined'
+                                onChange={(e) => setSpecialityTextField(e.target.value)}
+                            />
+                            <Button type='submit'>Add specialities</Button>
+                        </form>
+                        <DoctorFiltersSection options={[{
+                            title: "filter by name",
+                            type: "text",
+                            field: "name",
+                            value: name,
+                            onChange: (value: string) => setName(value),
+                            action: () => setName(""),
+                            showClearButton: name,
+                        },
+                        {
+                            title: "ascending / descending",
+                            type: "sorting",
+                            fields: ['speciality'],
+                            value: sortBy,
+                            onChange: (value: string) => setSortBy(value),
+                            orderValue: sortOrder,
+                            onOrderChange: (value: string) => setSortOrder(value),
+                            action: () => setSortOrder('descending'),
+                            showClearButton: sortOrder !== 'descending',
+                        },
+                        {
+                            title: "filter by speciality",
+                            type: "speciality",
+                            value: speciality,
+                            onChange: (value: string) => setSpeciality(value),
+                            action: () => setSpeciality(""),
+                            doctors,
+                            showClearButton: speciality,
+                        }]} />
+
+
                     </Box>
                     <Button
                         sx={{ width: '100%' }}
@@ -153,6 +165,7 @@ export default function DoctorPage() {
                 handleClickOpen={handleClickOpen}
                 handleClose={handleClose}
                 selectedDoctor={selectedDoctor}
+                specialities={specialities}
             />
             <Snackbar
                 open={isSuccessSubmit}
