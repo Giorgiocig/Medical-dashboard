@@ -3,17 +3,19 @@ import DialogContent from '@mui/material/DialogContent'
 import DialogTitle from '@mui/material/DialogTitle'
 import CreateDoctor from './doctorPage.tsx/CreateDoctor'
 import type { IFormDialog } from '../utilities/interfaces'
+import { useState } from 'react'
+import { Snackbar } from '@mui/material'
 
 export default function FormDialog({
-    setSuccessMessage,
-    setIsSuccessSubmit,
-    setErrorMessage,
-    setIsError,
     handleClose,
     openFormDialog,
     selectedDoctor,
     specialities
 }: IFormDialog) {
+    const [successMessage, setSuccessMessage] = useState<string | null>(null)
+    const [errorMessage, setErrorMessage] = useState<string | null>(null)
+    const [isSuccessSubmit, setIsSuccessSubmit] = useState(false)
+    const [isError, setIsError] = useState(false)
     return (
         <>
             <Dialog
@@ -35,6 +37,18 @@ export default function FormDialog({
                     />
                 </DialogContent>
             </Dialog>
+            <Snackbar
+                open={isSuccessSubmit}
+                autoHideDuration={1500}
+                message={successMessage}
+                onClose={() => setIsSuccessSubmit(false)}
+            />
+            <Snackbar
+                open={isError}
+                autoHideDuration={2000}
+                message={errorMessage}
+                onClose={() => setIsError(false)}
+            />
         </>
     )
 }

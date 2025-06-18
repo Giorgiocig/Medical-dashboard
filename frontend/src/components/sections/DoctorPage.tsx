@@ -1,7 +1,6 @@
 import {
     Box,
     Button,
-    Snackbar,
     TextField,
     Typography,
 } from '@mui/material'
@@ -11,6 +10,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { getDoctors } from '../../api/doctors'
 import type { IDoctor } from '../../utilities/interfaces'
 import DoctorCardList from '../doctorPage.tsx/DoctorCardList'
+
 import FormDialog from '../FormDialalog'
 import ArrowCircleRightIcon from '@mui/icons-material/ArrowCircleRight'
 import VerticalBarChart from '../doctorPage.tsx/VerticalBarsChart'
@@ -28,11 +28,7 @@ export default function DoctorPage() {
     const [selectedDoctor, setSelectedDoctor] = useState<null | IDoctor>(null)
     const [openFormDialog, setOpenFormDialog] = useState(false)
     const [specialityTextField, setSpecialityTextField] = useState<string>('')
-    //message
-    const [successMessage, setSuccessMessage] = useState<null | string>(null)
-    const [isSuccessSubmit, setIsSuccessSubmit] = useState<boolean>(false)
-    const [errorMessage, setErrorMessage] = useState<null | string>(null)
-    const [isError, setIsError] = useState<boolean>(false)
+
     // debounce
     const debouncedName = useDebounce(name, 500)
 
@@ -157,27 +153,12 @@ export default function DoctorPage() {
                 </Box>
             </Box>
             <FormDialog
-                setSuccessMessage={setSuccessMessage}
-                setIsSuccessSubmit={setIsSuccessSubmit}
-                setErrorMessage={setErrorMessage}
-                setIsError={setIsError}
                 openFormDialog={openFormDialog}
                 handleClickOpen={handleClickOpen}
                 handleClose={handleClose}
                 selectedDoctor={selectedDoctor}
                 specialities={specialities}
-            />
-            <Snackbar
-                open={isSuccessSubmit}
-                autoHideDuration={1500}
-                message={successMessage}
-                onClose={() => setIsSuccessSubmit(false)}
-            />
-            <Snackbar
-                open={isError}
-                autoHideDuration={2000}
-                message={errorMessage}
-                onClose={() => setIsError(false)}
+
             />
         </Box>
     )
