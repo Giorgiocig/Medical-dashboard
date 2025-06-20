@@ -9,6 +9,7 @@ export default function BasicSelect({
     value,
     onChange,
 }: any) {
+
     return (
         <Box sx={{ minWidth: 120 }}>
             <FormControl fullWidth>
@@ -20,8 +21,8 @@ export default function BasicSelect({
                     label="Speciality"
                     onChange={onChange}
                 >
-                    {specialities.map((spec: any) => (
-                        <MenuItem key={spec.specialityName} value={spec.specialityName}>
+                    {specialities.map((spec: any, indx: number) => (
+                        <MenuItem key={indx} value={spec.specialityName}>
                             {spec.specialityName}
                         </MenuItem>
                     ))}
