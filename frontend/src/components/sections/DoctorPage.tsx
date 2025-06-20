@@ -16,18 +16,17 @@ import ArrowCircleRightIcon from '@mui/icons-material/ArrowCircleRight'
 import VerticalBarChart from '../doctorPage.tsx/VerticalBarsChart'
 import { extractSpecialityRecurrence } from '../../utilities/helpers'
 import { useCountDoctorAvailabilityByKey } from '../../hooks/useCountDoctorAvailabilityByKey'
-import { createSpeciality, getSpecialities } from '../../api/specialities'
+import { getSpecialities } from '../../api/specialities'
 import DoctorFiltersSection from '../doctorPage.tsx/DoctorFiltersSection'
+import SpecialityPopover from '../doctorPage.tsx/SpecialityPopover'
 
 export default function DoctorPage() {
     const [name, setName] = useState('')
     const [speciality, setSpeciality] = useState("")
-    const [specialities, setSpecialities] = useState<any>('')
     const [sortBy, setSortBy] = useState('speciality')
     const [sortOrder, setSortOrder] = useState('descending')
     const [selectedDoctor, setSelectedDoctor] = useState<null | IDoctor>(null)
     const [openFormDialog, setOpenFormDialog] = useState(false)
-    const [specialityTextField, setSpecialityTextField] = useState<string>('')
 
     // debounce
     const debouncedName = useDebounce(name, 500)
@@ -57,34 +56,20 @@ export default function DoctorPage() {
     const extractedAvailableForClinic = useCountDoctorAvailabilityByKey(doctors, "availableForClinic")
     const extractedAvailableForOperatingRoom = useCountDoctorAvailabilityByKey(doctors, "availableForOperatingRoom")
 
-    const queryClient = useQueryClient()
-
-    const createSpecialityMutation = useMutation({
-        mutationFn: (data: string) => createSpeciality(data),
-        onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ['specialities'] })
-        },
+    const { data: specialities = [] } = useQuery({
+        queryKey: ['specialities'],
+        queryFn: getSpecialities,
     })
-
-    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault()
-        createSpecialityMutation.mutate(specialityTextField)
-    }
-
-    useEffect(() => {
-        const fetchData = async () => {
-            const response = await getSpecialities()
-            setSpecialities(response)
-        }
-        fetchData()
-    }, [])
 
 
     return (
         <Box>
-            <Typography sx={{ paddingBottom: 6 }}>
-                Numbers of Doctors in the building: {doctors.length}
-            </Typography>
+            <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+                <Typography sx={{ paddingBottom: 6 }}>
+                    Numbers of Doctors in the building: {doctors.length}
+                </Typography>
+                <SpecialityPopover specialities={specialities} />
+            </Box>
             <Box sx={{ display: "flex", gap: 6 }}>
                 <Box>
                     <Box
@@ -97,14 +82,7 @@ export default function DoctorPage() {
                         }}
                     >
                         <DoctorCardList doctors={doctors} handleClickOpen={handleClickOpen} />
-                        <form onSubmit={handleSubmit}>
-                            <TextField
-                                label="add new speciality"
-                                variant='outlined'
-                                onChange={(e) => setSpecialityTextField(e.target.value)}
-                            />
-                            <Button type='submit'>Add specialities</Button>
-                        </form>
+
                         <DoctorFiltersSection options={[{
                             title: "filter by name",
                             type: "text",
