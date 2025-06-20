@@ -14,13 +14,7 @@ export default function SpecialityFilter({
     onChange: (value: string) => void
     doctors: IDoctor[]
 }) {
-    const [allSpecialities, setAllSpecialities] = useState<string[]>([])
-
-    useEffect(() => {
-        const specialities = doctors.map((doctor: IDoctor) => doctor.speciality)
-        setAllSpecialities(specialities)
-    }, [doctors])
-
+    const specialities = Array.from(new Set(doctors.map(doctor => doctor.speciality)))
 
     return (
         <Box sx={{ display: "flex", flexDirection: "column" }}>
@@ -28,7 +22,7 @@ export default function SpecialityFilter({
             <Autocomplete
                 value={value}
                 onChange={(_, newValue) => onChange(newValue ?? '')}
-                options={allSpecialities}
+                options={specialities}
                 renderInput={(params) => (
                     <TextField {...params} label="Speciality" variant="outlined" />
                 )}
