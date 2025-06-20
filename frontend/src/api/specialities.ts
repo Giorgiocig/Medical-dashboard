@@ -19,3 +19,13 @@ export const createSpeciality = async (specialityName: string) => {
 
   return await res.json()
 }
+
+export const deleteSpeciality = async (id: string) => {
+  const res = await fetch(
+    `${import.meta.env.VITE_BACKEND_URL}/specialities/${id}`,
+    {
+      method: 'DELETE',
+    },
+  )
+  return await res.json()
+}
